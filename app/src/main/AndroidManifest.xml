@@ -12,31 +12,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ReportsActivity"
-            android:parentActivityName=".HomePage"></activity>
+        <activity
+            android:name=".ReportsActivity"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".RequestDetail"
-            android:parentActivityName=".RequestActivity" />
+            android:parentActivityName=".RequestActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RequestActivity"
-            android:parentActivityName=".HomePage" />
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProductDetail"
-            android:parentActivityName=".SupplyActivity" />
+            android:parentActivityName=".SupplyActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AddProductActivity"
             android:parentActivityName=".SupplyActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SupplyActivity"
-            android:parentActivityName=".HomePage" />
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HomePage"
             android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

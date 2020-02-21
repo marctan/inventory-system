@@ -3,6 +3,9 @@ package com.example.marcqtan.inventorysystem;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -14,6 +17,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
@@ -32,25 +37,20 @@ public class ReportsActivity extends AppCompatActivity {
 
     @BindView(R.id.spinner)
     Spinner monthsList;
-    @BindView(R.id.rvrequestreport)
-    RecyclerView rvrequest;
-    @BindView(R.id.rvsuppliesreport)
-    RecyclerView rvsupply;
     @BindView(R.id.noMonth)
     TextView no_month;
     @BindView(R.id.progress)
     ProgressBar progressBar;
-    @BindView(R.id.listsupply)
-    TextView listsupply;
-    @BindView(R.id.listrequest)
-    TextView listrequest;
+    @BindView(R.id.btnReportSwitch)
+    Button reportSwitch;
+    @BindView(R.id.container)
+    FrameLayout frmcontainer;
 
     List<Request> requests;
     List<Product> requested_product;
     List<Product> products;
 
-    ReportRequestAdapter requestAdapter;
-    ReportSuppliesAdapter supplyAdapter;
+    static int REPORT_VIEW = 0;//0 = request report 1 = supply report
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,23 +73,16 @@ public class ReportsActivity extends AppCompatActivity {
         requested_product = new ArrayList<>();
         requests = new ArrayList<>();
 
-        requestAdapter = new ReportRequestAdapter(this, requests, requested_product);
-        rvrequest.setAdapter(requestAdapter);
-        rvrequest.setHasFixedSize(true);
-        rvrequest.setLayoutManager(new LinearLayoutManager(this));
-
-        supplyAdapter = new ReportSuppliesAdapter(this, products);
-        rvsupply.setAdapter(supplyAdapter);
-        rvsupply.setHasFixedSize(true);
-        rvsupply.setLayoutManager(new LinearLayoutManager(this));
+        loadFragment(new ReportRequestFragment(requested_product, requests));
+        REPORT_VIEW = 0;
 
         monthsList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position > 0) {
-                    listrequest.setVisibility(View.VISIBLE);
-                    listsupply.setVisibility(View.VISIBLE);
                     no_month.setVisibility(View.GONE);
+                    frmcontainer.setVisibility(View.VISIBLE);
+                    reportSwitch.setVisibility(View.VISIBLE);
                     String month = monthsList.getSelectedItem().toString();
                     String monthNumber = "";
                     switch (month) {
@@ -133,9 +126,9 @@ public class ReportsActivity extends AppCompatActivity {
 
                     new RequestsbyMonthAsync(ReportsActivity.this).execute(monthNumber);
                 } else {
-                    listrequest.setVisibility(View.GONE);
-                    listsupply.setVisibility(View.GONE);
                     no_month.setVisibility(View.VISIBLE);
+                    frmcontainer.setVisibility(View.GONE);
+                    reportSwitch.setVisibility(View.GONE);
                 }
             }
 
@@ -144,8 +137,30 @@ public class ReportsActivity extends AppCompatActivity {
 
             }
         });
+
+        reportSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(reportSwitch.getText().toString().equals("View Request Report")) {
+                    reportSwitch.setText("View Supply Report");
+                    loadFragment(new ReportRequestFragment(requested_product, requests));
+                    REPORT_VIEW = 0;
+                } else {
+                    reportSwitch.setText("View Request Report");
+                    loadFragment(new ReportSupplyFragment(products));
+                    REPORT_VIEW = 1;
+                }
+            }
+        });
     }
 
+    void loadFragment(Fragment frag) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.addToBackStack(null);
+        ft.replace(R.id.container,frag);
+        ft.commit();
+    }
 
     static class RequestsbyMonthAsync extends AsyncTask<String, Void, List<Request>> {
         WeakReference<ReportsActivity> activity;
@@ -186,9 +201,17 @@ public class ReportsActivity extends AppCompatActivity {
             ra.progressBar.setVisibility(View.GONE);
             ra.requests.clear();
             ra.requests.addAll(requests);
-            ra.requestAdapter.notifyDataSetChanged();
-            ra.supplyAdapter.notifyDataSetChanged();
 
+            FragmentManager fm = ra.getSupportFragmentManager();
+
+            Fragment reportFrag = fm.findFragmentById(R.id.container);
+            if(reportFrag != null && reportFrag.isAdded()) {
+                if(REPORT_VIEW == 1) {
+                    ((ReportSupplyFragment) reportFrag).adapter.notifyDataSetChanged();
+                } else {
+                    ((ReportRequestFragment) reportFrag).adapter.notifyDataSetChanged();
+                }
+            }
             super.onPostExecute(requests);
         }
     }

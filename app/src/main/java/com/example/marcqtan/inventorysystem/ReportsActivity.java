@@ -51,6 +51,7 @@ public class ReportsActivity extends AppCompatActivity {
     List<Product> products;
 
     static int REPORT_VIEW = 0;//0 = request report 1 = supply report
+    AdapterInterface adapterIface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,10 @@ public class ReportsActivity extends AppCompatActivity {
         requested_product = new ArrayList<>();
         requests = new ArrayList<>();
 
-        loadFragment(new ReportRequestFragment(requested_product, requests));
+
+        ReportRequestFragment frag = new ReportRequestFragment(requested_product, requests);
+        adapterIface = frag;
+        loadFragment(frag);
         REPORT_VIEW = 0;
 
         monthsList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -141,13 +145,17 @@ public class ReportsActivity extends AppCompatActivity {
         reportSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(reportSwitch.getText().toString().equals("View Request Report")) {
+                if (reportSwitch.getText().toString().equals("View Request Report")) {
                     reportSwitch.setText("View Supply Report");
-                    loadFragment(new ReportRequestFragment(requested_product, requests));
+                    ReportRequestFragment frag = new ReportRequestFragment(requested_product, requests);
+                    adapterIface = frag;
+                    loadFragment(frag);
                     REPORT_VIEW = 0;
                 } else {
                     reportSwitch.setText("View Request Report");
-                    loadFragment(new ReportSupplyFragment(products));
+                    ReportSupplyFragment frag = new ReportSupplyFragment(products);
+                    adapterIface = frag;
+                    loadFragment(frag);
                     REPORT_VIEW = 1;
                 }
             }
@@ -158,7 +166,7 @@ public class ReportsActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(null);
-        ft.replace(R.id.container,frag);
+        ft.replace(R.id.container, frag);
         ft.commit();
     }
 
@@ -205,12 +213,8 @@ public class ReportsActivity extends AppCompatActivity {
             FragmentManager fm = ra.getSupportFragmentManager();
 
             Fragment reportFrag = fm.findFragmentById(R.id.container);
-            if(reportFrag != null && reportFrag.isAdded()) {
-                if(REPORT_VIEW == 1) {
-                    ((ReportSupplyFragment) reportFrag).adapter.notifyDataSetChanged();
-                } else {
-                    ((ReportRequestFragment) reportFrag).adapter.notifyDataSetChanged();
-                }
+            if (reportFrag != null && reportFrag.isAdded()) {
+                ra.adapterIface.notifyAdapter();
             }
             super.onPostExecute(requests);
         }

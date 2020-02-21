@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Marc Q. Tan on 21/02/2020.
  */
-public class ReportRequestFragment extends Fragment {
+public class ReportRequestFragment extends Fragment implements AdapterInterface{
 
     List<Product> products;
     List<Request> requests;
@@ -48,5 +48,14 @@ public class ReportRequestFragment extends Fragment {
         rvrequest.setHasFixedSize(true);
         rvrequest.setLayoutManager(new LinearLayoutManager(getContext()));
         return v;
+    }
+
+    @Override
+    public void notifyAdapter() {
+        adapter.notifyDataSetChanged();
+    }
+
+    public AdapterInterface getIface(){
+        return this;
     }
 }

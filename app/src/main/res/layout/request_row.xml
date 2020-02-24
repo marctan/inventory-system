@@ -47,7 +47,7 @@
                     android:id="@+id/requestorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Marc tan"
+                    android:text="Marct"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

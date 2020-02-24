@@ -106,7 +106,7 @@
         android:id="@+id/txtRequestor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Marc Tan"
+        android:text="Marc"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView6"

@@ -28,6 +28,8 @@ public class HomePage extends AppCompatActivity {
     ImageView image_account;
     @BindView(R.id.txRequest)
     TextView txtRequest;
+    @BindView(R.id.txtReport)
+    TextView txtReport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +48,11 @@ public class HomePage extends AppCompatActivity {
         if(MainActivity.isAdmin) {
             txtRequest.setText("List of Requests");
             image_report.setVisibility(View.VISIBLE);
+            txtReport.setVisibility(View.VISIBLE);
         } else {
             txtRequest.setText("My Requests");
             image_report.setVisibility(View.GONE);
+            txtReport.setVisibility(View.GONE);
         }
 
         image_supply.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +125,7 @@ public class HomePage extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 SearchRecentSuggestions suggestions = new SearchRecentSuggestions(HomePage.this,
                         SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);

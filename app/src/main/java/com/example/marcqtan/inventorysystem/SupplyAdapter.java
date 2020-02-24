@@ -73,6 +73,7 @@ public class SupplyAdapter extends RecyclerView.Adapter<SupplyAdapter.MyViewHold
                 public void onClick(View v) {
                     Intent i = new Intent(ctx, ProductDetail.class);
                     i.putExtra("product_id", products.get(getAdapterPosition()).getId());
+                    i.putExtra("imageURI", products.get(getAdapterPosition()).getImageURI());
                     ((Activity) ctx).startActivityForResult(i, 2);
                 }
             });

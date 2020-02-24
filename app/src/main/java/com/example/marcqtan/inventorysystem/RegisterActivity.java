@@ -68,6 +68,11 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 
     private static class saveToDBTask extends AsyncTask<Void, Void, Void> {
         WeakReference<Context> ctx;

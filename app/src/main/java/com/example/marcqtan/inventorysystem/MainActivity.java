@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             dialog.dismiss();
 
             if (user == null) {
-                Toast.makeText(ctx.get(), "Login Failed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctx.get(), "Incorrect password or username!", Toast.LENGTH_SHORT).show();
             } else {
                 userID = user.getId();
                 isAdmin = user.isAdmin();
@@ -119,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra("lastname", user.getLastname());
                 i.putExtra("username", user.getUsername());
                 i.putExtra("admin",user.isAdmin());
-                act.get().finish();
                 act.get().startActivity(i);
+                act.get().finish();
             }
         }
     }

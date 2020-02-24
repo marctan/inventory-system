@@ -1,5 +1,6 @@
 package com.example.marcqtan.inventorysystem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,9 +10,12 @@ import butterknife.ButterKnife;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
@@ -20,11 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.marcqtan.inventorysystem.AssortedUtility.CameraGalleryHandler;
 import com.example.marcqtan.inventorysystem.database.InventoryDatabase;
 import com.example.marcqtan.inventorysystem.database.Product;
 import com.example.marcqtan.inventorysystem.database.Request;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,8 +51,56 @@ public class ProductDetail extends AppCompatActivity {
     TextView dateAdded;
     @BindView(R.id.btnUpdate)
     Button update;
+
     EditText edField;
 
+    String image_uri = null;
+    String cameraFilePath = null;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == CameraGalleryHandler.PERMISSION_ALL) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED //0 camera 1 file
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, CameraGalleryHandler.PICK_IMAGE_CAMERA);
+            } else {
+                Toast.makeText(this, "Camera or write storage permission was denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CameraGalleryHandler.PICK_IMAGE_CAMERA) {
+            try {
+                Bitmap bitmap = CameraGalleryHandler.cameraImage(ProductDetail.this, cameraFilePath.replace("file://", ""));
+                Uri imageURI = CameraGalleryHandler.getImageUri(ProductDetail.this, bitmap);
+                image_uri = CameraGalleryHandler.getRealPathFromURI(ProductDetail.this, imageURI);
+
+                productImage.setImageBitmap(bitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (requestCode == CameraGalleryHandler.PICK_IMAGE_GALLERY) {
+            if(data != null) {
+                Uri selectedImage = data.getData();
+                Bitmap bitmap = CameraGalleryHandler.galleryImage(ProductDetail.this, selectedImage);
+
+                Uri imageURI = CameraGalleryHandler.getImageUri(ProductDetail.this, bitmap);
+                image_uri = CameraGalleryHandler.getRealPathFromURI(ProductDetail.this, imageURI);
+                productImage.setImageBitmap(bitmap);
+            }
+        }
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +119,7 @@ public class ProductDetail extends AppCompatActivity {
         update.setText(MainActivity.isAdmin ? "SAVE CHANGES" : "REQUEST PRODUCT");
 
         int product_id = getIntent().getIntExtra("product_id", 0);
+        image_uri = getIntent().getStringExtra("imageURI");
         new GetProduct(this, product_id).execute();
         update.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,8 +136,9 @@ public class ProductDetail extends AppCompatActivity {
                         return;
                     }
 
+
                     Product productToUpdate = new Product(product_id, productDesc.getText().toString(), productName.getText().toString(),
-                            "testURI", product.getDateAdded(), Integer.parseInt(qty.getText().toString()));
+                            image_uri, product.getDateAdded(), Integer.parseInt(qty.getText().toString()));
 
                     new UpdateProduct(ProductDetail.this, productToUpdate).execute();
                 } else {
@@ -116,6 +173,22 @@ public class ProductDetail extends AppCompatActivity {
                 }
             }
         });
+
+        if(MainActivity.isAdmin) {
+            productImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        File image = CameraGalleryHandler.createImageFile();
+                        // Save a file: path for using again
+                        cameraFilePath = "file://" + image.getAbsolutePath();
+                        CameraGalleryHandler.selectImage(ProductDetail.this, image);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     private static class GetProduct extends AsyncTask<Void, Void, Void> {
@@ -142,6 +215,8 @@ public class ProductDetail extends AppCompatActivity {
             activity.dateAdded.setText(activity.product.getDateAdded());
             if(activity.product.getImageURI() != null) {
                 activity.productImage.setImageURI(Uri.parse(activity.product.getImageURI()));
+            } else {
+                activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.avatar));
             }
             super.onPostExecute(aVoid);
         }

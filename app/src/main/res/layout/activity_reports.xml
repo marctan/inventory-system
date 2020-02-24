@@ -52,7 +52,7 @@
         </FrameLayout>
 
         <Button
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/btnReportSwitch"
             android:layout_margin="20dp"
             android:layout_gravity="bottom|center"

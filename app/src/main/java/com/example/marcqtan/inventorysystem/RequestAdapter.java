@@ -47,6 +47,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
         holder.requestorName.setText(request.getRequestorName());
         if (requested_product.getImageURI() != null) {
             holder.productImage.setImageURI(Uri.parse(requested_product.getImageURI()));
+        } else {
+            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.avatar));
         }
     }
 

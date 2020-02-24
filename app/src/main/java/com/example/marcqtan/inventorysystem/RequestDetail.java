@@ -47,6 +47,12 @@ public class RequestDetail extends AppCompatActivity {
     Request request;
 
     @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_detail);
@@ -229,6 +235,8 @@ public class RequestDetail extends AppCompatActivity {
 
             if (activity.product.getImageURI() != null) {
                 activity.productImage.setImageURI(Uri.parse(activity.product.getImageURI()));
+            } else {
+                activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.avatar));
             }
 
             if(status.equals("PENDING")) {

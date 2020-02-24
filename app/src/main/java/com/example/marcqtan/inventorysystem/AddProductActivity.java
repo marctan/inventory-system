@@ -289,8 +289,10 @@ public class AddProductActivity extends AppCompatActivity {
         protected void onPostExecute(Void products) {
             activity.get().progressBar.setVisibility(View.GONE);
             Toast.makeText(activity.get().getApplicationContext(), "Product successfully added to DB!"
-                    , Toast.LENGTH_LONG).show();
+                    , Toast.LENGTH_SHORT).show();
             super.onPostExecute(products);
+            Intent returnIntent = new Intent();
+            activity.get().setResult(Activity.RESULT_OK, returnIntent);
             activity.get().finish();
         }
     }

@@ -1,5 +1,6 @@
 package com.example.marcqtan.inventorysystem;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -72,7 +73,7 @@ public class SupplyAdapter extends RecyclerView.Adapter<SupplyAdapter.MyViewHold
                 public void onClick(View v) {
                     Intent i = new Intent(ctx, ProductDetail.class);
                     i.putExtra("product_id", products.get(getAdapterPosition()).getId());
-                    ctx.startActivity(i);
+                    ((Activity) ctx).startActivityForResult(i, 2);
                 }
             });
         }

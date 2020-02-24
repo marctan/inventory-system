@@ -38,6 +38,10 @@ public class RequestDetail extends AppCompatActivity {
     Button approve;
     @BindView(R.id.btnDeny)
     Button deny;
+    @BindView(R.id.txtStatus)
+    TextView status;
+    @BindView(R.id.txtStatusView)
+    TextView statusLabel;
 
     Product product;
     Request request;
@@ -59,19 +63,39 @@ public class RequestDetail extends AppCompatActivity {
 
         new GetRequestedProduct(this, request_id, product_id).execute();
 
-        approve.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ApproveRequest(RequestDetail.this, request_id, product_id).execute();
-            }
-        });
+        if (MainActivity.isAdmin) {
+            statusLabel.setVisibility(View.GONE);
+            status.setVisibility(View.GONE);
+            approve.setVisibility(View.VISIBLE);
+            deny.setVisibility(View.VISIBLE);
+            approve.setText("APPROVE");
+            approve.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new ApproveRequest(RequestDetail.this, request_id, product_id).execute();
+                }
+            });
 
-        deny.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DenyRequest(RequestDetail.this, request_id).execute();
-            }
-        });
+            deny.setText("DENY");
+            deny.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new DenyRequest(RequestDetail.this, request_id).execute();
+                }
+            });
+        } else {
+            statusLabel.setVisibility(View.VISIBLE);
+            status.setVisibility(View.VISIBLE);
+            approve.setText("CANCEL REQUEST");
+            deny.setVisibility(View.GONE);
+            approve.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new CancelRequest(RequestDetail.this, request_id).execute();
+                }
+            });
+
+        }
     }
 
 
@@ -79,6 +103,7 @@ public class RequestDetail extends AppCompatActivity {
         WeakReference<RequestDetail> act;
         int requestId;
         int productId;
+
         ApproveRequest(RequestDetail act, int requestId, int productId) {
             this.act = new WeakReference<>(act);
             this.productId = productId;
@@ -91,7 +116,7 @@ public class RequestDetail extends AppCompatActivity {
 
             //update the request table
             InventoryDatabase.getInstance(act.get().getApplicationContext()).requestDao().approveRequest(
-                    formatedDate, MainActivity.userID, true, requestId);
+                    formatedDate, MainActivity.userID, true, requestId, 1);
 
             //update the qty in products table
             InventoryDatabase.getInstance(act.get().getApplicationContext()).productsDao().updateQuantity(
@@ -123,7 +148,7 @@ public class RequestDetail extends AppCompatActivity {
 
             //update the request table
             InventoryDatabase.getInstance(act.get().getApplicationContext()).requestDao().approveRequest(
-                    formatedDate, MainActivity.userID, false, requestId);
+                    formatedDate, MainActivity.userID, false, requestId, 2);
 
             return null;
         }
@@ -132,6 +157,29 @@ public class RequestDetail extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Toast.makeText(act.get().getApplicationContext(), "Request Denied!", Toast.LENGTH_SHORT).show();
+            act.get().finish();
+        }
+    }
+
+    private static class CancelRequest extends AsyncTask<Void, Void, Void> {
+        WeakReference<RequestDetail> act;
+        int requestId;
+
+        CancelRequest(RequestDetail act, int requestId) {
+            this.act = new WeakReference<>(act);
+            this.requestId = requestId;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            InventoryDatabase.getInstance(act.get().getApplicationContext()).requestDao().cancelRequest(requestId);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(act.get().getApplicationContext(), "Request Cancelled!", Toast.LENGTH_SHORT).show();
             act.get().finish();
         }
     }
@@ -157,13 +205,36 @@ public class RequestDetail extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             RequestDetail activity = act.get();
+            String status = "Unknown";
             activity.productName.setText(activity.request.getProductName());
             activity.dateRequested.setText(activity.request.getDateRequested());
             activity.qty.setText(String.valueOf(activity.request.getQuantityRequest()));
             activity.requestor.setText(activity.request.getRequestorName());
 
+            switch (activity.request.getStatus()) {
+                case 0:
+                    status = "PENDING";
+                    break;
+                case 1:
+                    status = "APPROVED";
+                    break;
+                case 2:
+                    status = "DENIED";
+                    break;
+                case 3:
+                    status = "CANCELLED";
+                    break;
+            }
+            activity.status.setText(status);
+
             if (activity.product.getImageURI() != null) {
                 activity.productImage.setImageURI(Uri.parse(activity.product.getImageURI()));
+            }
+
+            if(status.equals("PENDING")) {
+                activity.approve.setVisibility(View.VISIBLE);
+            } else {
+                activity.approve.setVisibility(View.GONE);
             }
             super.onPostExecute(aVoid);
         }

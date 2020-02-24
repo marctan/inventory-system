@@ -54,8 +54,4 @@ public class ReportRequestFragment extends Fragment implements AdapterInterface{
     public void notifyAdapter() {
         adapter.notifyDataSetChanged();
     }
-
-    public AdapterInterface getIface(){
-        return this;
-    }
 }

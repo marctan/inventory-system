@@ -74,8 +74,14 @@ public class RequestActivity extends AppCompatActivity {
 
         @Override
         protected List<Request> doInBackground(Void... voids) {
-            List<Request> req = InventoryDatabase.getInstance(activity.get().getApplicationContext())
-                    .requestDao().getAllRequests();
+            List<Request> req;
+            if(MainActivity.isAdmin) {
+                req = InventoryDatabase.getInstance(activity.get().getApplicationContext())
+                        .requestDao().getAllRequests();
+            } else {
+                req = InventoryDatabase.getInstance(activity.get().getApplicationContext())
+                        .requestDao().getAllRequestsByRequestor(MainActivity.userID);
+            }
 
             activity.get().requested_products.clear();
 

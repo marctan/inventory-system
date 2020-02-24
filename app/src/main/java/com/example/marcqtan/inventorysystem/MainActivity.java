@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     Button register;
 
     static int userID = 0;
+    static boolean isAdmin = false;
+    static String loggedInName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,9 +112,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(ctx.get(), "Login Failed!", Toast.LENGTH_SHORT).show();
             } else {
                 userID = user.getId();
+                isAdmin = user.isAdmin();
+                loggedInName = user.getFirstname() + " " + user.getLastname();
                 Intent i = new Intent(act.get(), HomePage.class);
-                i.putExtra("user_id", user.getId());
+                i.putExtra("firstname", user.getFirstname());
+                i.putExtra("lastname", user.getLastname());
+                i.putExtra("username", user.getUsername());
                 i.putExtra("admin",user.isAdmin());
+                act.get().finish();
                 act.get().startActivity(i);
             }
         }

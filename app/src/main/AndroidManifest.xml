@@ -13,9 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".AccountActivity"
+            android:parentActivityName=".HomePage"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".ReportsActivity"
             android:parentActivityName=".HomePage"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".RequestDetail"
             android:parentActivityName=".RequestActivity"
@@ -34,8 +38,16 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".SupplyActivity"
+            android:launchMode="singleTop"
             android:parentActivityName=".HomePage"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".HomePage"
             android:screenOrientation="portrait" />
@@ -62,6 +74,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <provider android:name=".SearchSuggestionProvider"
+            android:authorities="com.example.MySuggestionProvider" />
     </application>
 
 </manifest>

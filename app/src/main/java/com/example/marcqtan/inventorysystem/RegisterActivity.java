@@ -105,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             progressBar.get().setVisibility(View.GONE);
-            Toast.makeText(ctx.get(), "Successfully created account!", Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx.get(), "Successfully created account!", Toast.LENGTH_SHORT).show();
             super.onPostExecute(aVoid);
             act.get().finish();
         }

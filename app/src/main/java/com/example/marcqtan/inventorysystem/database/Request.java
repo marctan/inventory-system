@@ -30,9 +30,11 @@ public class Request {
     private int idApprover;
     @ColumnInfo(name = "isApproved")
     private boolean isApproved;
+    @ColumnInfo(name = "status")
+    private int status; //0 = pending 1 = approved 2 = denied 3 = cancelled
 
     public Request(Integer id, int idProduct, int idRequestor, String productName, String requestorName
-            , int quantityRequest, String dateRequested, String dateApproved, int idApprover, boolean isApproved) {
+            , int quantityRequest, String dateRequested, String dateApproved, int idApprover, boolean isApproved, int status) {
         this.id = id;
         this.idProduct = idProduct;
         this.idRequestor = idRequestor;
@@ -43,6 +45,7 @@ public class Request {
         this.dateApproved = dateApproved;
         this.idApprover = idApprover;
         this.isApproved = isApproved;
+        this.status = status;
     }
 
     public int getId() {
@@ -83,5 +86,9 @@ public class Request {
 
     public boolean isApproved() {
         return isApproved;
+    }
+
+    public int getStatus() {
+        return status;
     }
 }

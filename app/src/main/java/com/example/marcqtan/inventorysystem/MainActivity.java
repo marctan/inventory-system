@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected User doInBackground(Void... voids) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

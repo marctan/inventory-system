@@ -85,7 +85,7 @@ public class ProductDetail extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else if (requestCode == CameraGalleryHandler.PICK_IMAGE_GALLERY) {
-            if(data != null) {
+            if (data != null) {
                 Uri selectedImage = data.getData();
                 Bitmap bitmap = CameraGalleryHandler.galleryImage(ProductDetail.this, selectedImage);
 
@@ -124,7 +124,7 @@ public class ProductDetail extends AppCompatActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.isAdmin) {
+                if (MainActivity.isAdmin) {
                     if (qty.getText().toString().length() == 0 || productName.getText().toString().length() == 0 ||
                             productDesc.getText().toString().length() == 0) {
                         Toast.makeText(ProductDetail.this, "Some fields are missing!", Toast.LENGTH_SHORT).show();
@@ -158,9 +158,14 @@ public class ProductDetail extends AppCompatActivity {
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    new AddRequest(ProductDetail.this, product_id,
-                                            Integer.parseInt(edField.getText().toString())).execute();
-                                    dialog.dismiss();
+                                    if ((edField.getText().toString().length() > 0 && edField.getText().toString().equals("0")) ||
+                                            edField.getText().toString().length() == 0 ) {
+                                        Toast.makeText(ProductDetail.this, "Input a valid quantity!", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        new AddRequest(ProductDetail.this, product_id,
+                                                Integer.parseInt(edField.getText().toString())).execute();
+                                        dialog.dismiss();
+                                    }
                                 }
                             })
                             .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -174,7 +179,7 @@ public class ProductDetail extends AppCompatActivity {
             }
         });
 
-        if(MainActivity.isAdmin) {
+        if (MainActivity.isAdmin) {
             productImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -213,7 +218,7 @@ public class ProductDetail extends AppCompatActivity {
             activity.productDesc.setText(activity.product.getDescription());
             activity.qty.setText(String.valueOf(activity.product.getQuantity()));
             activity.dateAdded.setText(activity.product.getDateAdded());
-            if(activity.product.getImageURI() != null) {
+            if (activity.product.getImageURI() != null) {
                 activity.productImage.setImageURI(Uri.parse(activity.product.getImageURI()));
             } else {
                 activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.avatar));

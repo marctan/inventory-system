@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.marcqtan.inventorysystem"
+        applicationId "com.inventory.myinventorysystem.inventorysystem"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1

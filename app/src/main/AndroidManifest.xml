@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.marcqtan.inventorysystem">
+    package="com.inventory.myinventorysystem.inventorysystem">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -13,33 +13,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Screens.AccountActivity"
-            android:parentActivityName=".Screens.HomePage"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.AccountActivity"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.ReportsActivity"
-            android:parentActivityName=".Screens.HomePage"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.ReportsActivity"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.RequestDetail"
-            android:parentActivityName=".Screens.RequestActivity"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.RequestDetail"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.RequestActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.RequestActivity"
-            android:parentActivityName=".Screens.HomePage"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.RequestActivity"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.ProductDetail"
-            android:parentActivityName=".Screens.SupplyActivity"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.ProductDetail"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.SupplyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.AddProductActivity"
-            android:parentActivityName=".Screens.SupplyActivity"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.AddProductActivity"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.SupplyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.SupplyActivity"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.SupplyActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".Screens.HomePage"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.HomePage"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.searchable"
@@ -49,14 +49,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Screens.HomePage"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.RegisterActivity"
-            android:parentActivityName=".Screens.MainActivity"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.RegisterActivity"
+            android:parentActivityName="com.inventory.myinventorysystem.inventorysystem.Screens.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Screens.MainActivity"
+            android:name="com.inventory.myinventorysystem.inventorysystem.Screens.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -75,8 +75,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <provider android:name=".SearchProvider.SearchSuggestionProvider"
-            android:authorities="com.example.MySuggestionProvider" />
+        <provider
+            android:name="com.inventory.myinventorysystem.inventorysystem.SearchProvider.SearchSuggestionProvider"
+            android:authorities="com.inventory.MySuggestionProvider" />
     </application>
 
 </manifest>

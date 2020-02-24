@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Adapters;
 
 import android.content.Context;
 import android.net.Uri;
@@ -8,20 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.marcqtan.inventorysystem.R;
 import com.example.marcqtan.inventorysystem.database.Product;
 import com.example.marcqtan.inventorysystem.database.Request;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Marc Q. Tan on 21/02/2020.
- */
 public class ReportRequestAdapter extends RecyclerView.Adapter<ReportRequestAdapter.MyViewHolder> {
     List<Request> requests;
     List<Product> products;

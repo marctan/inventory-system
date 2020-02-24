@@ -24,9 +24,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
-/**
- * Created by Marc Q. Tan on 24/02/2020.
- */
 public class CameraGalleryHandler {
 
     public static final int PICK_IMAGE_CAMERA = 1, PICK_IMAGE_GALLERY = 2;

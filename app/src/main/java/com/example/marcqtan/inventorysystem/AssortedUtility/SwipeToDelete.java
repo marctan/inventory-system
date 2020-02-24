@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.AssortedUtility;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,14 +10,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+import com.example.marcqtan.inventorysystem.R;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
-/**
- * Created by Marc Q. Tan on 16/02/2020.
- */
 
 abstract public class SwipeToDelete extends ItemTouchHelper.Callback {
 
@@ -30,7 +28,7 @@ abstract public class SwipeToDelete extends ItemTouchHelper.Callback {
     private int intrinsicHeight;
 
 
-    SwipeToDelete(Context context) {
+    public SwipeToDelete(Context context) {
         mContext = context;
         mBackground = new ColorDrawable();
         backgroundColor = Color.parseColor("#FFFF0000");

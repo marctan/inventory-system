@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Fragments;
 
 
 import android.os.Bundle;
@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.marcqtan.inventorysystem.Adapters.ReportRequestAdapter;
+import com.example.marcqtan.inventorysystem.AdapterInterface.AdapterInterface;
+import com.example.marcqtan.inventorysystem.R;
 import com.example.marcqtan.inventorysystem.database.Product;
 import com.example.marcqtan.inventorysystem.database.Request;
 
@@ -19,32 +22,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * Created by Marc Q. Tan on 21/02/2020.
- */
-public class ReportSupplyFragment extends Fragment implements AdapterInterface {
+public class ReportRequestFragment extends Fragment implements AdapterInterface {
 
     List<Product> products;
+    List<Request> requests;
 
-    ReportSuppliesAdapter adapter;
-    @BindView(R.id.rvsuppliesreport)
-    RecyclerView rvsupply;
+    ReportRequestAdapter adapter;
+    @BindView(R.id.rvrequestreport)
+    RecyclerView rvrequest;
 
 
-    public ReportSupplyFragment(List<Product> products) {
+    public ReportRequestFragment(List<Product> products, List<Request> requests) {
         this.products = products;
+        this.requests = requests;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.supply_report_fragment,container,false);
+        View v = inflater.inflate(R.layout.request_report_fragment,container,false);
         ButterKnife.bind(this, v);
 
-        adapter = new ReportSuppliesAdapter(getContext(),products);
-        rvsupply.setAdapter(adapter);
-        rvsupply.setHasFixedSize(true);
-        rvsupply.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ReportRequestAdapter(getContext(), requests, products);
+        rvrequest.setAdapter(adapter);
+        rvrequest.setHasFixedSize(true);
+        rvrequest.setLayoutManager(new LinearLayoutManager(getContext()));
         return v;
     }
 

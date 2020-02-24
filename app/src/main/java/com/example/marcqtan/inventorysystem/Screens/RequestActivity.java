@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -7,13 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.marcqtan.inventorysystem.R;
+import com.example.marcqtan.inventorysystem.Adapters.RequestAdapter;
 import com.example.marcqtan.inventorysystem.database.InventoryDatabase;
 import com.example.marcqtan.inventorysystem.database.Product;
 import com.example.marcqtan.inventorysystem.database.Request;

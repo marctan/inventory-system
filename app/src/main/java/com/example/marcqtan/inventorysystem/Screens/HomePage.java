@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Screens;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.marcqtan.inventorysystem.R;
+import com.example.marcqtan.inventorysystem.SearchProvider.SearchSuggestionProvider;
 
 public class HomePage extends AppCompatActivity {
 

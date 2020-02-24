@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.marcqtan.inventorysystem.R;
 import com.example.marcqtan.inventorysystem.database.InventoryDatabase;
 import com.example.marcqtan.inventorysystem.database.User;
 

@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -7,6 +7,8 @@ import butterknife.ButterKnife;
 
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.marcqtan.inventorysystem.R;
 
 public class AccountActivity extends AppCompatActivity {
 

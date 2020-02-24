@@ -1,11 +1,10 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Screens;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +16,6 @@ import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,8 +25,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.marcqtan.inventorysystem.R;
+import com.example.marcqtan.inventorysystem.SearchProvider.SearchSuggestionProvider;
+import com.example.marcqtan.inventorysystem.Adapters.SupplyAdapter;
+import com.example.marcqtan.inventorysystem.AssortedUtility.SwipeToDelete;
 import com.example.marcqtan.inventorysystem.database.InventoryDatabase;
 import com.example.marcqtan.inventorysystem.database.Product;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

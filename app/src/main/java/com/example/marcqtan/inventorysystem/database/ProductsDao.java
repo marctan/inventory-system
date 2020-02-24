@@ -8,9 +8,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-/**
- * Created by Marc Q. Tan on 16/02/2020.
- */
 @Dao
 public interface ProductsDao {
     @Query("Select * from products")

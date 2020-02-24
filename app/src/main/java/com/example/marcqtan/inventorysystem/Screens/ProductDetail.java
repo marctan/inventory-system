@@ -1,4 +1,4 @@
-package com.example.marcqtan.inventorysystem;
+package com.example.marcqtan.inventorysystem.Screens;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.marcqtan.inventorysystem.AssortedUtility.CameraGalleryHandler;
+import com.example.marcqtan.inventorysystem.R;
 import com.example.marcqtan.inventorysystem.database.InventoryDatabase;
 import com.example.marcqtan.inventorysystem.database.Product;
 import com.example.marcqtan.inventorysystem.database.Request;

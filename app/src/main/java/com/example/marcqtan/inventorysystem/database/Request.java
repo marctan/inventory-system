@@ -4,10 +4,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-/**
- * Created by Marc Q. Tan on 18/02/2020.
- */
-
 @Entity(tableName = "requests")
 public class Request {
     @PrimaryKey(autoGenerate = true)

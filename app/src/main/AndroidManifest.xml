@@ -13,33 +13,33 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".AccountActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".Screens.AccountActivity"
+            android:parentActivityName=".Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ReportsActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".Screens.ReportsActivity"
+            android:parentActivityName=".Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RequestDetail"
-            android:parentActivityName=".RequestActivity"
+            android:name=".Screens.RequestDetail"
+            android:parentActivityName=".Screens.RequestActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RequestActivity"
-            android:parentActivityName=".HomePage"
+            android:name=".Screens.RequestActivity"
+            android:parentActivityName=".Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ProductDetail"
-            android:parentActivityName=".SupplyActivity"
+            android:name=".Screens.ProductDetail"
+            android:parentActivityName=".Screens.SupplyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddProductActivity"
-            android:parentActivityName=".SupplyActivity"
+            android:name=".Screens.AddProductActivity"
+            android:parentActivityName=".Screens.SupplyActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SupplyActivity"
+            android:name=".Screens.SupplyActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".HomePage"
+            android:parentActivityName=".Screens.HomePage"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.searchable"
@@ -49,14 +49,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".HomePage"
+            android:name=".Screens.HomePage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".Screens.RegisterActivity"
+            android:parentActivityName=".Screens.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Screens.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -75,7 +75,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <provider android:name=".SearchSuggestionProvider"
+        <provider android:name=".SearchProvider.SearchSuggestionProvider"
             android:authorities="com.example.MySuggestionProvider" />
     </application>
 

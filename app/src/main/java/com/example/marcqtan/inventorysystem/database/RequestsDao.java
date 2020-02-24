@@ -10,9 +10,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-/**
- * Created by Marc Q. Tan on 18/02/2020.
- */
 @Dao
 public interface RequestsDao {
     @Query("SELECT * FROM requests where idApprover = 0 and status = 0")

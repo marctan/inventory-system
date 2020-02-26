@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 import com.inventory.myinventorysystem.inventorysystem.AssortedUtility.CameraGalleryHandler;
+import com.inventory.myinventorysystem.inventorysystem.BuildConfig;
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
@@ -64,7 +66,18 @@ public class ProductDetail extends AppCompatActivity {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED //0 camera 1 file
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, CameraGalleryHandler.PICK_IMAGE_CAMERA);
+                File file = null;
+                try {
+                    file = CameraGalleryHandler.createImageFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (file != null) {
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file));
+                    cameraFilePath = "file://" + file.getAbsolutePath();
+                    startActivityForResult(intent, CameraGalleryHandler.PICK_IMAGE_CAMERA);
+                }
             } else {
                 Toast.makeText(this, "Camera or write storage permission was denied!", Toast.LENGTH_SHORT).show();
             }
@@ -76,6 +89,9 @@ public class ProductDetail extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CameraGalleryHandler.PICK_IMAGE_CAMERA) {
             try {
+                if (cameraFilePath == null) {
+                    cameraFilePath = CameraGalleryHandler.getCameraPath();
+                }
                 Bitmap bitmap = CameraGalleryHandler.cameraImage(ProductDetail.this, cameraFilePath.replace("file://", ""));
                 Uri imageURI = CameraGalleryHandler.getImageUri(ProductDetail.this, bitmap);
                 image_uri = CameraGalleryHandler.getRealPathFromURI(ProductDetail.this, imageURI);
@@ -109,7 +125,7 @@ public class ProductDetail extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        if(MainActivity.isAdmin) {
+        if (MainActivity.isAdmin) {
             myToolbar.setTitle("Edit Product");
         } else {
             myToolbar.setTitle("Request Product");
@@ -178,14 +194,7 @@ public class ProductDetail extends AppCompatActivity {
             productImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try {
-                        File image = CameraGalleryHandler.createImageFile();
-                        // Save a file: path for using again
-                        cameraFilePath = "file://" + image.getAbsolutePath();
-                        CameraGalleryHandler.selectImage(ProductDetail.this, image);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    CameraGalleryHandler.selectImage(ProductDetail.this);
                 }
             });
         }

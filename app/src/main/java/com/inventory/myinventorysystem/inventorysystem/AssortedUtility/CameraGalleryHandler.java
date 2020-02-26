@@ -29,11 +29,16 @@ public class CameraGalleryHandler {
     public static final int PICK_IMAGE_CAMERA = 1, PICK_IMAGE_GALLERY = 2;
     public static final int PERMISSION_ALL = 111;
 
+    private static String cameraPath;
+
     private static String[] PERMISSIONS = {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
             android.Manifest.permission.CAMERA
     };
 
+    public static String getCameraPath(){
+        return cameraPath;
+    }
 
     private static Bitmap getResizedBitmap(Bitmap image, int maxSize) {
         int width = image.getWidth();
@@ -98,7 +103,7 @@ public class CameraGalleryHandler {
         return true;
     }
 
-    public static void selectImage(Context ctx, File createImageFile) {
+    public static void selectImage(Context ctx) {
         final CharSequence[] options = {"Take Photo", "Choose From Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle("Choose option");
@@ -107,15 +112,24 @@ public class CameraGalleryHandler {
             public void onClick(DialogInterface dialog, int item) {
                 if (options[item].equals("Take Photo")) {
                     dialog.dismiss();
-
                     //request for file and camera permission;
                     if (!hasPermissions(ctx, PERMISSIONS)) {
                         ActivityCompat.requestPermissions(((Activity) ctx), PERMISSIONS, PERMISSION_ALL);
                     } else {
                         //permission granted for camera and file
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ctx, BuildConfig.APPLICATION_ID + ".provider", createImageFile));
-                        ((Activity)ctx).startActivityForResult(intent, PICK_IMAGE_CAMERA);
+                        File file = null;
+                        try {
+                            file = createImageFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        if(file != null) {
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ctx, BuildConfig.APPLICATION_ID + ".provider", file));
+                            cameraPath = "file://" + file.getAbsolutePath();
+                            ((Activity) ctx).startActivityForResult(intent, PICK_IMAGE_CAMERA);
+                        }
                     }
 
                 } else if (options[item].equals("Choose From Gallery")) {

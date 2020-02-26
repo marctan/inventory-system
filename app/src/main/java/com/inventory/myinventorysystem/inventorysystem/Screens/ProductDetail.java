@@ -216,7 +216,9 @@ public class ProductDetail extends AppCompatActivity {
             if (activity.product.getImageURI() != null) {
                 activity.productImage.setImageURI(Uri.parse(activity.product.getImageURI()));
             } else {
-                activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.add_photo_250));
+                activity.productImage.setImageDrawable(MainActivity.isAdmin ?
+                        activity.getResources().getDrawable(R.drawable.add_photo_250) :
+                        activity.getResources().getDrawable(R.drawable.photo_placeholder_icon_250));
             }
             super.onPostExecute(aVoid);
         }

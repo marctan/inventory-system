@@ -237,7 +237,7 @@ public class RequestDetail extends AppCompatActivity {
             if (activity.product.getImageURI() != null) {
                 activity.productImage.setImageURI(Uri.parse(activity.product.getImageURI()));
             } else {
-                activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.avatar));
+                activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.photo_placeholder_icon_250));
             }
 
             if(status.equals("PENDING")) {

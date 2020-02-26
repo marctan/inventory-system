@@ -1,6 +1,5 @@
 package com.inventory.myinventorysystem.inventorysystem.Screens;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
@@ -13,26 +12,25 @@ import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.SearchProvider.SearchSuggestionProvider;
 
 public class HomePage extends AppCompatActivity {
 
-    @BindView(R.id.image_supply)
-    ImageView image_supply;
-    @BindView(R.id.image_request)
-    ImageView image_request;
-    @BindView(R.id.image_report)
-    ImageView image_report;
-    @BindView(R.id.image_account)
-    ImageView image_account;
+    @BindView(R.id.rlSupply)
+    RelativeLayout image_supply;
+    @BindView(R.id.rlRequests)
+    RelativeLayout image_request;
+    @BindView(R.id.rlReports)
+    RelativeLayout image_report;
+    @BindView(R.id.rlAccount)
+    RelativeLayout image_account;
     @BindView(R.id.txRequest)
     TextView txtRequest;
-    @BindView(R.id.txtReport)
-    TextView txtReport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +49,9 @@ public class HomePage extends AppCompatActivity {
         if(MainActivity.isAdmin) {
             txtRequest.setText("List of Requests");
             image_report.setVisibility(View.VISIBLE);
-            txtReport.setVisibility(View.VISIBLE);
         } else {
             txtRequest.setText("My Requests");
             image_report.setVisibility(View.GONE);
-            txtReport.setVisibility(View.GONE);
         }
 
         image_supply.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +110,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void showLogoutMessage(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle("Logout");
         builder.setMessage("Are you sure you want to logout?");
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

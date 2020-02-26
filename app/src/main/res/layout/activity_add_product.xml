@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".Screens.AddProductActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,75 +27,82 @@
             android:id="@+id/productImage"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/add_photo_250"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:scaleType="centerCrop"
-            app:srcCompat="@drawable/avatar" />
+            app:layout_constraintTop_toBottomOf="@id/my_toolbar" />
 
-        <EditText
-            android:id="@+id/productName"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/t1"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:ems="10"
-            android:hint="Name of product"
-            android:inputType="textPersonName"
+            android:layout_marginTop="30dp"
+            android:hint="Product Name"
             app:layout_constraintEnd_toEndOf="@+id/productImage"
             app:layout_constraintHorizontal_bias="0.461"
             app:layout_constraintStart_toStartOf="@+id/productImage"
-            app:layout_constraintTop_toBottomOf="@+id/productImage" />
+            app:layout_constraintTop_toBottomOf="@+id/productImage">
 
-        <EditText
-            android:id="@+id/productDesc"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/productName"
+                android:inputType="textPersonName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/t2"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:ems="10"
+            android:layout_marginTop="5dp"
             android:hint="Description"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toEndOf="@+id/productName"
+            app:layout_constraintEnd_toEndOf="@+id/t1"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/productName"
-            app:layout_constraintTop_toBottomOf="@+id/productName" />
+            app:layout_constraintStart_toStartOf="@+id/t1"
+            app:layout_constraintTop_toBottomOf="@+id/t1">
 
-        <TextView
-            android:id="@+id/qty"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="Quantity:"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/productDesc"
-            app:layout_constraintHorizontal_bias="0.258"
-            app:layout_constraintStart_toStartOf="@+id/productDesc"
-            app:layout_constraintTop_toBottomOf="@+id/productDesc" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/productDesc"
+                android:inputType="textPersonName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/productQty"
-            android:layout_width="50dp"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/t3"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:ems="10"
-            android:textAlignment="center"
-            android:inputType="number"
-            app:layout_constraintBottom_toBottomOf="@+id/qty"
-            app:layout_constraintStart_toEndOf="@+id/qty"
-            app:layout_constraintTop_toTopOf="@+id/qty"
-            app:layout_constraintVertical_bias="0.523" />
+            android:layout_marginTop="5dp"
+            android:hint="Quantity"
+            app:layout_constraintEnd_toEndOf="@+id/t2"
+            app:layout_constraintStart_toStartOf="@+id/t2"
+            app:layout_constraintTop_toBottomOf="@+id/t2">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/productQty"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="240dp"
+            android:layout_marginTop="22dp"
             android:text="Add Product"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.496"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/productImage" />
+            app:layout_constraintEnd_toEndOf="@+id/t2"
+            app:layout_constraintStart_toStartOf="@+id/t2"
+            app:layout_constraintTop_toBottomOf="@+id/t3" />
 
         <ProgressBar
             android:id="@+id/progressBar"

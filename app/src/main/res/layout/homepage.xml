@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    tools:context=".Screens.MainActivity">
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -16,100 +11,148 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ToolBarStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.5" />
+        android:layout_centerInParent="true">
 
-    <ImageView
-        android:id="@+id/image_supply"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:srcCompat="@drawable/avatar"
-        tools:srcCompat="@tools:sample/avatars" />
+        <RelativeLayout
+            android:id="@+id/rlSupply"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center">
 
-    <ImageView
-        android:id="@+id/image_request"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/image_supply"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:srcCompat="@drawable/avatar"
-        tools:srcCompat="@tools:sample/avatars" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/image_report"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:srcCompat="@drawable/avatar"
-        tools:srcCompat="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/supply_icon" />
 
-    <ImageView
-        android:id="@+id/image_account"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="12dp"
-        app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/image_report"
-        app:srcCompat="@drawable/avatar"
-        tools:srcCompat="@tools:sample/avatars" />
+                <TextView
+                    android:id="@+id/txtSupply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="List of Supplies"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
 
-    <TextView
-        android:id="@+id/txtSupply"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="List of Supplies"
-        app:layout_constraintEnd_toEndOf="@+id/image_supply"
-        app:layout_constraintStart_toStartOf="@+id/image_supply"
-        app:layout_constraintTop_toBottomOf="@+id/image_supply" />
+        <RelativeLayout
+            android:id="@+id/rlRequests"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="20dp"
+            android:layout_toRightOf="@+id/rlSupply"
+            android:background="@color/colorPrimary"
+            android:gravity="center">
 
-    <TextView
-        android:id="@+id/txRequest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="List of Requests"
-        app:layout_constraintEnd_toEndOf="@+id/image_request"
-        app:layout_constraintStart_toStartOf="@+id/image_request"
-        app:layout_constraintTop_toBottomOf="@+id/image_request" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/txtReport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reports"
-        app:layout_constraintEnd_toEndOf="@+id/image_report"
-        app:layout_constraintStart_toStartOf="@+id/image_report"
-        app:layout_constraintTop_toBottomOf="@+id/image_report" />
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/request_icon" />
 
-    <TextView
-        android:id="@+id/txtAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Account"
-        app:layout_constraintEnd_toEndOf="@+id/image_account"
-        app:layout_constraintStart_toStartOf="@+id/image_account"
-        app:layout_constraintTop_toBottomOf="@+id/image_account" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/txRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="List of Requests"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlReports"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_below="@+id/rlSupply"
+            android:layout_marginRight="20dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image3"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/reports_icon" />
+
+                <TextView
+                    android:id="@+id/txtReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reports"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlAccount"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_below="@id/rlRequests"
+            android:layout_toRightOf="@id/rlReports"
+            android:background="@color/colorPrimary"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/image4"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/account_icon" />
+
+                <TextView
+                    android:id="@+id/txtAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Account"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

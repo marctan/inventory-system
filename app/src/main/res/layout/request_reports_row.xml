@@ -1,24 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="5dp"
+    app:rippleColor="@color/colorAccent">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="2dp">
 
-        <ImageView
-            android:layout_gravity="center"
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/productImage"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@drawable/avatar"
+            android:src="@drawable/photo_placeholder_icon_80"
+            app:civ_border_color="#80ffffff"
+            app:civ_border_width="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="10dp">
+            >
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -39,16 +46,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Product Name: "
-                    android:textSize="16sp"
-                    android:textStyle="italic" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/productName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Softdrink"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -60,17 +65,15 @@
                     android:id="@+id/rName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Requestor Name: "
-                    android:textSize="16sp"
-                    android:textStyle="italic" />
+                    android:text="Name: "
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/requestorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Marc"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -84,8 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Requested Quantity: "
-                    android:textSize="16sp"
-                    android:textStyle="italic" />
+                    android:textSize="15sp" />
 
 
                 <TextView
@@ -93,8 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -107,8 +108,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Date Requested: "
-                    android:textSize="16sp"
-                    android:textStyle="italic" />
+                    android:textSize="15sp" />
 
 
                 <TextView
@@ -116,9 +116,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,8 +129,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Date Approved: "
-                    android:textSize="16sp"
-                    android:textStyle="italic" />
+                    android:textSize="15sp" />
 
 
                 <TextView
@@ -138,10 +137,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

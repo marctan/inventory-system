@@ -24,74 +24,108 @@
             app:layout_constraintTop_toTopOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <EditText
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edFirstName"
+            android:layout_marginTop="50dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:ems="10"
-            android:hint="First Name"
-            android:inputType="textPersonName"
+            android:hint="FirstName"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/my_toolbar">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TedFirstName"
+                android:layout_width="match_parent"
+                android:ems="13"
+                android:inputType="textPersonName"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edLastName"
+            android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:hint="Last Name"
-            android:inputType="textPersonName"
+            android:hint="LastName"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:layout_constraintEnd_toEndOf="@+id/edFirstName"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/edFirstName"
-            app:layout_constraintTop_toBottomOf="@+id/edFirstName" />
+            app:layout_constraintTop_toBottomOf="@+id/edFirstName">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TedLastName"
+                android:layout_width="match_parent"
+                android:ems="13"
+                android:inputType="textPersonName"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edAccountUsername"
+            android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:hint="username"
-            android:inputType="textPersonName"
+            android:hint="Username"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:layout_constraintEnd_toEndOf="@+id/edFirstName"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/edFirstName"
-            app:layout_constraintTop_toBottomOf="@+id/edLastName" />
+            app:layout_constraintTop_toBottomOf="@+id/edLastName">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TedAccountUsername"
+                android:layout_width="match_parent"
+                android:ems="13"
+                android:inputType="textPersonName"
+                android:layout_height="wrap_content"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/edAccountPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:ems="10"
-            android:hint="password"
-            android:inputType="textPassword"
+
+            android:hint="Password"
+            app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="@+id/edFirstName"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/edFirstName"
-            app:layout_constraintTop_toBottomOf="@+id/edAccountUsername" />
+            app:layout_constraintTop_toBottomOf="@+id/edAccountUsername">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TedAccountPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="13"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnCreateAccount"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_height="wrap_content"
             android:text="submit"
+            app:layout_constraintBaseline_toBaselineOf="@+id/checkBoxAdmin"
             app:layout_constraintEnd_toEndOf="@+id/edAccountPassword"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/checkBoxAdmin"
-            app:layout_constraintTop_toBottomOf="@+id/edAccountPassword" />
+            app:layout_constraintHorizontal_bias="0.423"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxAdmin" />
 
         <CheckBox
             android:id="@+id/checkBoxAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="29dp"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="28dp"
             android:text="Admin"
             app:layout_constraintStart_toStartOf="@+id/edAccountPassword"
             app:layout_constraintTop_toBottomOf="@+id/edAccountPassword" />

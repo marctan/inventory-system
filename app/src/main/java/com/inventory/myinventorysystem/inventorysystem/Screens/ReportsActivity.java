@@ -169,7 +169,6 @@ public class ReportsActivity extends AppCompatActivity {
     void loadFragment(Fragment frag) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.addToBackStack(null);
         ft.replace(R.id.container, frag);
         ft.commit();
     }

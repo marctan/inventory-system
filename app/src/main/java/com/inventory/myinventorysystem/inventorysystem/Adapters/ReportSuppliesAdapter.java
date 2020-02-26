@@ -39,7 +39,7 @@ public class ReportSuppliesAdapter extends RecyclerView.Adapter<ReportSuppliesAd
         if (product.getImageURI() != null) {
             holder.productImage.setImageURI(Uri.parse(product.getImageURI()));
         } else {
-            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.avatar));
+            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
         }
         holder.productName.setText(product.getName());
         holder.productDesc.setText(product.getDescription());

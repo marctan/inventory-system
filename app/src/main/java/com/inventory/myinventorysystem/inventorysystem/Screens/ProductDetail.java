@@ -24,12 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputLayout;
 import com.inventory.myinventorysystem.inventorysystem.AssortedUtility.CameraGalleryHandler;
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
 import com.inventory.myinventorysystem.inventorysystem.database.Request;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,8 +53,6 @@ public class ProductDetail extends AppCompatActivity {
     TextView dateAdded;
     @BindView(R.id.btnUpdate)
     Button update;
-
-    EditText edField;
 
     String image_uri = null;
     String cameraFilePath = null;
@@ -110,7 +109,11 @@ public class ProductDetail extends AppCompatActivity {
         ButterKnife.bind(this);
 
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle("Edit Product");
+        if(MainActivity.isAdmin) {
+            myToolbar.setTitle("Edit Product");
+        } else {
+            myToolbar.setTitle("Request Product");
+        }
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -143,24 +146,15 @@ public class ProductDetail extends AppCompatActivity {
 
                     new UpdateProduct(ProductDetail.this, productToUpdate).execute();
                 } else {
-                    TextInputLayout iL = new TextInputLayout(ProductDetail.this);
-                    iL.setPadding(
-                            ProductDetail.this.getResources().getDimensionPixelOffset(R.dimen.dp_19),
-                            ProductDetail.this.getResources().getDimensionPixelOffset(R.dimen.dp_19),
-                            ProductDetail.this.getResources().getDimensionPixelOffset(R.dimen.dp_19),
-                            0
-                    );
-                    iL.setHint("Enter quantity:");
-                    edField = new EditText(ProductDetail.this);
-                    iL.addView(edField);
-                    edField.setInputType(InputType.TYPE_CLASS_NUMBER);
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(ProductDetail.this)
-                            .setView(iL)
+                    View view = getLayoutInflater().inflate(R.layout.quantity_alert_layout, null);
+                    EditText edField = view.findViewById(R.id.edQty);
+                    MaterialAlertDialogBuilder dialog = new MaterialAlertDialogBuilder(ProductDetail.this)
+                            .setView(view)
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     if ((edField.getText().toString().length() > 0 && edField.getText().toString().equals("0")) ||
-                                            edField.getText().toString().length() == 0 ) {
+                                            edField.getText().toString().length() == 0) {
                                         Toast.makeText(ProductDetail.this, "Input a valid quantity!", Toast.LENGTH_SHORT).show();
                                     } else {
                                         new AddRequest(ProductDetail.this, product_id,
@@ -222,7 +216,7 @@ public class ProductDetail extends AppCompatActivity {
             if (activity.product.getImageURI() != null) {
                 activity.productImage.setImageURI(Uri.parse(activity.product.getImageURI()));
             } else {
-                activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.avatar));
+                activity.productImage.setImageDrawable(activity.getResources().getDrawable(R.drawable.add_photo_250));
             }
             super.onPostExecute(aVoid);
         }

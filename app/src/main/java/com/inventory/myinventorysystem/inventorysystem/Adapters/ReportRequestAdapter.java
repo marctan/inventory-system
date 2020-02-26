@@ -43,7 +43,7 @@ public class ReportRequestAdapter extends RecyclerView.Adapter<ReportRequestAdap
         if (products.get(position).getImageURI() != null) {
             holder.productImage.setImageURI(Uri.parse(products.get(position).getImageURI()));
         } else {
-            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.avatar));
+            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
         }
 
         holder.requestorName.setText(req.getRequestorName());

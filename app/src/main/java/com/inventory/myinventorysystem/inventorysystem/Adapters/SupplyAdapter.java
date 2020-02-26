@@ -46,7 +46,7 @@ public class SupplyAdapter extends RecyclerView.Adapter<SupplyAdapter.MyViewHold
         if (product.getImageURI() != null) {
             holder.productImage.setImageURI(Uri.parse(product.getImageURI()));
         } else {
-            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.avatar));
+            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
         }
     }
 

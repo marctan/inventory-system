@@ -7,6 +7,7 @@ import butterknife.ButterKnife;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,8 +15,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.User;
@@ -24,10 +28,10 @@ import java.lang.ref.WeakReference;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.edUsername)
-    EditText username;
-    @BindView(R.id.edPassword)
-    EditText password;
+    @BindView(R.id.edMaterialUsername)
+    TextInputEditText username;
+    @BindView(R.id.edMaterialPassword)
+    TextInputEditText password;
     @BindView(R.id.btnLogin)
     Button login;
     @BindView(R.id.btnRegister)
@@ -49,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setTitle("Logging in");
         alertDialog.setMessage("Please wait..");
         alertDialog.setCancelable(false);
-        alertDialog.setCanceledOnTouchOutside(false);
 
         ButterKnife.bind(this);
 

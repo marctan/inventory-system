@@ -27,16 +27,16 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.btnCreateAccount)
     Button createAccount;
 
-    @BindView(R.id.edFirstName)
+    @BindView(R.id.TedFirstName)
     EditText firstname;
 
-    @BindView(R.id.edLastName)
+    @BindView(R.id.TedLastName)
     EditText lastname;
 
-    @BindView(R.id.edAccountUsername)
+    @BindView(R.id.TedAccountUsername)
     EditText username;
 
-    @BindView(R.id.edAccountPassword)
+    @BindView(R.id.TedAccountPassword)
     EditText password;
 
     @BindView(R.id.checkBoxAdmin)

@@ -28,6 +28,7 @@ public class CameraGalleryHandler {
 
     public static final int PICK_IMAGE_CAMERA = 1, PICK_IMAGE_GALLERY = 2;
     public static final int PERMISSION_ALL = 111;
+    public static final int PERMISSION_GALLERY = 222;
 
     private static String cameraPath;
 
@@ -134,8 +135,14 @@ public class CameraGalleryHandler {
 
                 } else if (options[item].equals("Choose From Gallery")) {
                     dialog.dismiss();
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    ((Activity)ctx).startActivityForResult(pickPhoto, PICK_IMAGE_GALLERY);
+
+                    if (!hasPermissions(ctx, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        ActivityCompat.requestPermissions(((Activity) ctx), new String[]
+                                {android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_GALLERY);
+                    } else {
+                        Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        ((Activity) ctx).startActivityForResult(pickPhoto, PICK_IMAGE_GALLERY);
+                    }
                 } else if (options[item].equals("Cancel")) {
                     dialog.dismiss();
                 }

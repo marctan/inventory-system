@@ -74,6 +74,14 @@ public class AddProductActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Camera or write storage permission was denied!", Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == CameraGalleryHandler.PERMISSION_GALLERY) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(pickPhoto, CameraGalleryHandler.PICK_IMAGE_GALLERY);
+            } else {
+                Toast.makeText(this, "Write storage permission was denied!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

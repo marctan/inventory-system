@@ -1,4 +1,4 @@
-# inventory-system
+# Android Inventory System
 An Android inventory system created using Room Database + LiveData + DataBinding + RXJava + Material Design
 <p float="left">
  <img width="300" height="600" src="https://github.com/marctan/inventory-system/blob/master/login_screen.png">

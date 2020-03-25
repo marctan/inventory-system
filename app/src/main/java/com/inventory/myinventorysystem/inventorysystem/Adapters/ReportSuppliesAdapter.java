@@ -3,67 +3,69 @@ package com.inventory.myinventorysystem.inventorysystem.Adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
+import com.inventory.myinventorysystem.inventorysystem.databinding.SupplyReportsRowBinding;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ReportSuppliesAdapter extends RecyclerView.Adapter<ReportSuppliesAdapter.MyViewHolder> {
-    List<Product> products;
-    Context ctx;
+    private List<Product> products;
+    private Context ctx;
 
-    public ReportSuppliesAdapter(Context ctx, List<Product> products) {
-        this.products = products;
+    public ReportSuppliesAdapter(Context ctx) {
         this.ctx = ctx;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.supply_reports_row, parent, false));
+        SupplyReportsRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.supply_reports_row
+        ,parent, false);
+        return new MyViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Product product = products.get(position);
+        holder.bind(product);
         if (product.getImageURI() != null) {
-            holder.productImage.setImageURI(Uri.parse(product.getImageURI()));
+            holder.binding.productImage.setImageURI(Uri.parse(product.getImageURI()));
         } else {
-            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
+            holder.binding.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
         }
-        holder.productName.setText(product.getName());
-        holder.productDesc.setText(product.getDescription());
-        holder.dateAdded.setText(product.getDateAdded());
     }
 
     @Override
     public int getItemCount() {
+        if(products == null) {
+            return 0;
+        }
         return products.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.productImage)
-        ImageView productImage;
-        @BindView(R.id.productName)
-        TextView productName;
-        @BindView(R.id.dateAdded)
-        TextView dateAdded;
-        @BindView(R.id.productDesc)
-        TextView productDesc;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        SupplyReportsRowBinding binding;
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        private MyViewHolder(@NonNull SupplyReportsRowBinding itemView) {
+            super(itemView.getRoot());
+            this.binding = itemView;
         }
+
+        public void bind(Product product) {
+            binding.setProduct(product);
+            binding.executePendingBindings();
+        }
+    }
+
+    public void setItem(List<Product> products) {
+        this.products = products;
+        notifyDataSetChanged();
     }
 }

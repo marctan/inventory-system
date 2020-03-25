@@ -6,72 +6,67 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.Screens.RequestDetail;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
 import com.inventory.myinventorysystem.inventorysystem.database.Request;
+import com.inventory.myinventorysystem.inventorysystem.databinding.RequestRowBinding;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHolder> {
-    List<Request> requests;
-    List<Product> products;
-    Context ctx;
+    private List<Request> requests;
+    private List<Product> products;
+    private Context ctx;
 
-    public RequestAdapter(Context ctx, List<Request> requests, List<Product> products) {
-        this.requests = requests;
+    public RequestAdapter(Context ctx) {
         this.ctx = ctx;
-        this.products = products;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.request_row, parent, false);
-        return new MyViewHolder(view);
+        RequestRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.request_row, parent, false);
+        return new MyViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Request request = requests.get(position);
+        holder.bind(request);
         Product requested_product = products.get(position);
-        holder.productName.setText(request.getProductName());
-        holder.requestedQuantity.setText(String.valueOf(request.getQuantityRequest()));
-        holder.requestorName.setText(request.getRequestorName());
         if (requested_product.getImageURI() != null) {
-            holder.productImage.setImageURI(Uri.parse(requested_product.getImageURI()));
+            holder.binding.productImage.setImageURI(Uri.parse(requested_product.getImageURI()));
         } else {
-            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
+            holder.binding.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
         }
     }
 
     @Override
     public int getItemCount() {
+        if (requests == null) {
+            return 0;
+        }
         return requests.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.productImage)
-        ImageView productImage;
-        @BindView(R.id.productName)
-        TextView productName;
-        @BindView(R.id.requestedQuantity)
-        TextView requestedQuantity;
-        @BindView(R.id.requestorName)
-        TextView requestorName;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        RequestRowBinding binding;
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
+        private void bind(Request request) {
+            binding.setRequest(request);
+            binding.executePendingBindings();
+        }
+
+        private MyViewHolder(@NonNull RequestRowBinding itemView) {
+            super(itemView.getRoot());
+            binding = itemView;
+            itemView.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(ctx, RequestDetail.class);
@@ -81,6 +76,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.MyViewHo
                 }
             });
         }
+    }
+
+    public void setRequests(List<Request> requests, List<Product> products) {
+        this.requests = requests;
+        this.products = products;
+        notifyDataSetChanged();
     }
 
 }

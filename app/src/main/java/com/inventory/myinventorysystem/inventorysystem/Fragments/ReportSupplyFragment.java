@@ -1,54 +1,57 @@
 package com.inventory.myinventorysystem.inventorysystem.Fragments;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.inventory.myinventorysystem.inventorysystem.Adapters.ReportSuppliesAdapter;
-import com.inventory.myinventorysystem.inventorysystem.AdapterInterface.AdapterInterface;
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
+import com.inventory.myinventorysystem.inventorysystem.databinding.SupplyReportFragmentBinding;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.ProductViewModel;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class ReportSupplyFragment extends Fragment implements AdapterInterface {
+public class ReportSupplyFragment extends Fragment {
 
-    List<Product> products;
+    private ReportSuppliesAdapter adapter;
+    private ProductViewModel productViewModel;
 
-    ReportSuppliesAdapter adapter;
-    @BindView(R.id.rvsuppliesreport)
-    RecyclerView rvsupply;
-
-
-    public ReportSupplyFragment(List<Product> products) {
-        this.products = products;
-    }
+    private SupplyReportFragmentBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.supply_report_fragment,container,false);
-        ButterKnife.bind(this, v);
+        binding = SupplyReportFragmentBinding.inflate(getLayoutInflater());
+        View v = binding.getRoot();
 
-        adapter = new ReportSuppliesAdapter(getContext(),products);
-        rvsupply.setAdapter(adapter);
-        rvsupply.setHasFixedSize(true);
-        rvsupply.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new ReportSuppliesAdapter(getContext());
+        binding.rvsuppliesreport.setAdapter(adapter);
+        binding.rvsuppliesreport.setHasFixedSize(true);
+        binding.rvsuppliesreport.setLayoutManager(new LinearLayoutManager(getContext()));
         return v;
     }
 
     @Override
-    public void notifyAdapter() {
-        adapter.notifyDataSetChanged();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        productViewModel = new ViewModelProvider(requireActivity(),
+                ViewModelProvider.AndroidViewModelFactory.getInstance((getActivity().getApplication()))).get(ProductViewModel.class);
+
+        productViewModel.getAddedProductByMonth().observe(getViewLifecycleOwner(), new Observer<List<Product>>() {
+            @Override
+            public void onChanged(List<Product> newProducts) {
+                getActivity().findViewById(R.id.progress).setVisibility(View.GONE);
+                adapter.setItem(newProducts);
+            }
+        });
     }
 }

@@ -2,50 +2,34 @@ package com.inventory.myinventorysystem.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-import android.app.Activity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
-import com.inventory.myinventorysystem.inventorysystem.R;
-import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.User;
-
-import java.lang.ref.WeakReference;
+import com.inventory.myinventorysystem.inventorysystem.databinding.ActivityMainBinding;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.UserViewModel;
 
 public class MainActivity extends AppCompatActivity {
-
-    @BindView(R.id.edMaterialUsername)
-    TextInputEditText username;
-    @BindView(R.id.edMaterialPassword)
-    TextInputEditText password;
-    @BindView(R.id.btnLogin)
-    Button login;
-    @BindView(R.id.btnRegister)
-    Button register;
 
     static int userID = 0;
     static boolean isAdmin = false;
     static String loggedInName = "";
 
+    UserViewModel userViewModel;
+    ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        Toolbar myToolbar = binding.myToolbar;
         myToolbar.setTitle("Login");
         setSupportActionBar(myToolbar);
 
@@ -54,78 +38,46 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.setMessage("Please wait..");
         alertDialog.setCancelable(false);
 
-        ButterKnife.bind(this);
+        userViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
+                .get(UserViewModel.class);
 
-        login.setOnClickListener(new View.OnClickListener() {
+        userViewModel.getUser().observe(this, new Observer<User>() {
             @Override
-            public void onClick(View v) {
-                if (username.getText().toString().length() == 0 || password.getText().toString().length() == 0) {
-                    Toast.makeText(getApplicationContext(), "Some fields are empty!", Toast.LENGTH_SHORT).show();
-                    return;
+            public void onChanged(User user) {
+                alertDialog.dismiss();
+
+                if (user == null) {
+                    Toast.makeText(MainActivity.this, "Incorrect password or username!", Toast.LENGTH_SHORT).show();
+                } else {
+                    userID = user.getId();
+                    isAdmin = user.isAdmin();
+                    loggedInName = user.getFirstname() + " " + user.getLastname();
+                    Intent i = new Intent(MainActivity.this, HomePage.class);
+                    startActivity(i);
+                    finish();
                 }
-                new queryDBLogin(MainActivity.this, alertDialog, getApplicationContext(),
-                        username.getText().toString(), password.getText().toString()).execute();
             }
         });
 
-        register.setOnClickListener(new View.OnClickListener() {
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.edMaterialUsername.getText().toString().length() == 0 || binding.edMaterialPassword.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), "Some fields are empty!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                alertDialog.show();
+
+                userViewModel.queryUser(binding.edMaterialUsername.getText().toString(), binding.edMaterialPassword.getText().toString());
+            }
+        });
+
+        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, RegisterActivity.class);
                 startActivity(i);
             }
         });
-    }
-
-    private static class queryDBLogin extends AsyncTask<Void, Void, User> {
-        WeakReference<Context> ctx;
-        String username, password;
-        AlertDialog dialog;
-        WeakReference<Activity> act;
-
-        queryDBLogin(Activity act, AlertDialog dialog, Context ctx, String username, String password) {
-            this.ctx = new WeakReference<>(ctx);
-            this.username = username;
-            this.password = password;
-            this.dialog = dialog;
-            this.act = new WeakReference<>(act);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            dialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected User doInBackground(Void... voids) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return InventoryDatabase.getInstance(ctx.get()).userDao().getUser(username, password);
-        }
-
-        @Override
-        protected void onPostExecute(User user) {
-            super.onPostExecute(user);
-            dialog.dismiss();
-
-            if (user == null) {
-                Toast.makeText(ctx.get(), "Incorrect password or username!", Toast.LENGTH_SHORT).show();
-            } else {
-                userID = user.getId();
-                isAdmin = user.isAdmin();
-                loggedInName = user.getFirstname() + " " + user.getLastname();
-                Intent i = new Intent(act.get(), HomePage.class);
-                i.putExtra("firstname", user.getFirstname());
-                i.putExtra("lastname", user.getLastname());
-                i.putExtra("username", user.getUsername());
-                i.putExtra("admin",user.isAdmin());
-                act.get().startActivity(i);
-                act.get().finish();
-            }
-        }
     }
 }

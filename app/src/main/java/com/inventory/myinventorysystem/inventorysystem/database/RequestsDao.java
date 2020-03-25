@@ -2,22 +2,23 @@ package com.inventory.myinventorysystem.inventorysystem.database;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.Update;;
 
 @Dao
 public interface RequestsDao {
     @Query("SELECT * FROM requests where idApprover = 0 and status = 0")
-    List<Request> getAllRequests();
+    LiveData<List<Request>> getAllRequests();
 
     @Query("SELECT * FROM requests WHERE idRequestor = :id")
-    List<Request> getAllRequestsByRequestor(int id);
+    LiveData<List<Request>> getAllRequestsByRequestor(int id);
 
     @Query("Select * from requests where id = :id limit 1")
-    Request getRequest(int id);
+    LiveData<Request> getRequest(int id);
 
     @Query("SELECT * FROM requests where isApproved = 1 and strftime('%m', dateApproved) = :month")
     List<Request> getApprovedRequestByMonth(String month);

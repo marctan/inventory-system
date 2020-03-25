@@ -1,161 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Screens.RequestDetail">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_toolbar"
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="status"
+            type="String" />
+
+        <variable
+            name="admin"
+            type="Boolean" />
+
+        <variable
+            name="request"
+            type="com.inventory.myinventorysystem.inventorysystem.database.Request" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ToolBarStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:layout_height="match_parent"
+        tools:context=".Screens.RequestDetail">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ToolBarStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
-    <ImageView
-        android:id="@+id/productImage"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/photo_placeholder_icon_250"
-        app:layout_constraintDimensionRatio="W,16:8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:text="Requestor Name:"
-        android:textColor="@android:color/black"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/txtProductName"
-        app:layout_constraintTop_toBottomOf="@+id/txtProductName" />
-
-    <TextView
-        android:id="@+id/txtDateRequested"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2020-8-25"
-        android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView12"
-        app:layout_constraintStart_toStartOf="@+id/txtQty" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Quantity Request:"
-        android:textColor="@android:color/black"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-    <TextView
-        android:id="@+id/txtQty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="5"
-        android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView10"
-        app:layout_constraintStart_toStartOf="@+id/txtRequestor" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Date Requested:"
-        android:textColor="@android:color/black"
-        android:textSize="13sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-    <TextView
-        android:id="@+id/txtProductName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="40dp"
-        android:text="Coke"
-        android:textColor="@android:color/black"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lStatus" />
-
-    <TextView
-        android:id="@+id/txtRequestor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="Marc"
-        android:textSize="13sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
-        app:layout_constraintStart_toEndOf="@+id/textView6" />
-
-    <Button
-        android:id="@+id/btnApprove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
-        android:text="Approve"
-        app:layout_constraintEnd_toStartOf="@+id/btnDeny"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
-
-    <Button
-        android:id="@+id/btnDeny"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:text="Deny"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnApprove"
-        app:layout_constraintTop_toTopOf="@+id/btnApprove" />
-
-    <LinearLayout
-        android:id="@+id/lStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:orientation="horizontal"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/productImage">
+        <ImageView
+            android:id="@+id/productImage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/photo_placeholder_icon_250"
+            app:layout_constraintDimensionRatio="W,16:8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
 
         <TextView
-            android:id="@+id/txtStatusView"
+            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="STATUS:"
+            android:layout_marginTop="14dp"
+            android:text="Requestor Name:"
             android:textColor="@android:color/black"
-            android:textSize="20sp" />
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/txtProductName"
+            app:layout_constraintTop_toBottomOf="@+id/txtProductName" />
 
         <TextView
-            android:id="@+id/txtStatus"
+            android:id="@+id/txtDateRequested"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Pending"
-            android:textAllCaps="true"
-            android:textSize="20sp" />
-    </LinearLayout>
+            android:text="@{request.dateRequested}"
+            android:textSize="13sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView12"
+            app:layout_constraintStart_toStartOf="@+id/txtQty" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Quantity Request:"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/textView6"
+            app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+        <TextView
+            android:id="@+id/txtQty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(request.quantityRequest)}"
+            android:textSize="13sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView10"
+            app:layout_constraintStart_toStartOf="@+id/txtRequestor" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Date Requested:"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/textView10"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+        <TextView
+            android:id="@+id/txtProductName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="40dp"
+            android:text="@{request.productName, default=Coke}"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lStatus" />
+
+        <TextView
+            android:id="@+id/txtRequestor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{request.requestorName}"
+            android:textSize="13sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView6"
+            app:layout_constraintStart_toEndOf="@+id/textView6" />
+
+        <Button
+            android:id="@+id/btnApprove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="55dp"
+            android:text="@{admin ? `APPROVE` : `CANCEL REQUEST`, default=APPROVE}"
+            android:visibility="@{admin ? View.VISIBLE : status.equals(`PENDING`) ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toStartOf="@+id/btnDeny"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+        <Button
+            android:id="@+id/btnDeny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Deny"
+            android:visibility="@{admin ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btnApprove"
+            app:layout_constraintTop_toTopOf="@+id/btnApprove" />
+
+        <LinearLayout
+            android:id="@+id/lStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/productImage">
+
+            <TextView
+                android:id="@+id/txtStatusView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STATUS:"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:visibility="@{admin ? View.GONE : View.VISIBLE}" />
+
+            <TextView
+                android:id="@+id/txtStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="@{status}"
+                android:textAllCaps="true"
+                android:textSize="20sp"
+                android:visibility="@{admin ? View.GONE : View.VISIBLE}" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

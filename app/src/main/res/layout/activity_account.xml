@@ -1,130 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".Screens.AccountActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_toolbar"
+    <data>
+
+        <variable
+            name="user"
+            type="com.inventory.myinventorysystem.inventorysystem.database.User" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ToolBarStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".Screens.AccountActivity">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <View
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:background="@drawable/account_bg" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/avatar"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
-            android:background="@drawable/admin_avatar"
-            android:elevation="8dp" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:theme="@style/ToolBarStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="155dp"
-            android:layout_marginBottom="20dp"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="10dp"
-            app:cardElevation="10dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@drawable/account_bg" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="25dp"
+                android:background="@{user.admin ? @drawable/admin_avatar : @drawable/user_avatar, default=@drawable/admin_avatar}"
+                android:elevation="8dp" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="320dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="155dp"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp">
 
-                <TextView
-                    android:textColor="#242222"
-                    android:id="@+id/firstname"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="John"
-                    android:textSize="15sp" />
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Firstname"
-                    android:textSize="10sp" />
+                    <TextView
+                        android:id="@+id/firstname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.firstname, default=marc}"
+                        android:textColor="#242222"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:textColor="#242222"
-                    android:id="@+id/lastname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Doe"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Firstname"
+                        android:textSize="10sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Lastname"
-                    android:textSize="10sp" />
+                    <TextView
+                        android:id="@+id/lastname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@{user.lastname, default=tan}"
+                        android:textColor="#242222"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:textColor="#242222"
-                    android:id="@+id/username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="johndoe123"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lastname"
+                        android:textSize="10sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="username"
-                    android:textSize="10sp" />
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@{user.username, default=marctan}"
+                        android:textColor="#242222"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:textColor="#242222"
-                    android:id="@+id/type"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Admin"
-                    android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="username"
+                        android:textSize="10sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Account Type"
-                    android:textSize="10sp" />
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="@{user.admin ? `Admin` : `User`,default=Admin}"
+                        android:textColor="#242222"
+                        android:textSize="15sp" />
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Account Type"
+                        android:textSize="10sp" />
 
-        </com.google.android.material.card.MaterialCardView>
-    </RelativeLayout>
+                </LinearLayout>
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"
-        android:ems="10"
-        android:text="Logout" />
-</LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:ems="10"
+            android:text="Logout" />
+    </LinearLayout>
+</layout>

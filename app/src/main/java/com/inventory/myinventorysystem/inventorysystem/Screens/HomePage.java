@@ -2,8 +2,7 @@ package com.inventory.myinventorysystem.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.databinding.DataBindingUtil;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,49 +11,27 @@ import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.SearchProvider.SearchSuggestionProvider;
+import com.inventory.myinventorysystem.inventorysystem.databinding.HomepageBinding;
 
 public class HomePage extends AppCompatActivity {
 
-    @BindView(R.id.rlSupply)
-    RelativeLayout image_supply;
-    @BindView(R.id.rlRequests)
-    RelativeLayout image_request;
-    @BindView(R.id.rlReports)
-    RelativeLayout image_report;
-    @BindView(R.id.rlAccount)
-    RelativeLayout image_account;
-    @BindView(R.id.txRequest)
-    TextView txtRequest;
+    HomepageBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.homepage);
-        ButterKnife.bind(this);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        binding = DataBindingUtil.setContentView(this, R.layout.homepage);
+        Toolbar myToolbar = binding.myToolbar;
         myToolbar.setTitle("Dashboard");
         setSupportActionBar(myToolbar);
-        String firstname = getIntent().getStringExtra("firstname");
-        String lastname = getIntent().getStringExtra("lastname");
-        String username = getIntent().getStringExtra("username");
 
-        boolean isAdmin = getIntent().getBooleanExtra("admin", false);
+        binding.setIsAdmin(MainActivity.isAdmin);
 
-        if(MainActivity.isAdmin) {
-            txtRequest.setText("List of Requests");
-            image_report.setVisibility(View.VISIBLE);
-        } else {
-            txtRequest.setText("My Requests");
-            image_report.setVisibility(View.GONE);
-        }
-
-        image_supply.setOnClickListener(new View.OnClickListener() {
+        binding.rlSupply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HomePage.this, SupplyActivity.class);
@@ -62,7 +39,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        image_request.setOnClickListener(new View.OnClickListener() {
+        binding.rlRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HomePage.this, RequestActivity.class);
@@ -70,7 +47,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        image_report.setOnClickListener(new View.OnClickListener() {
+        binding.rlReports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HomePage.this, ReportsActivity.class);
@@ -78,16 +55,15 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-        image_account.setOnClickListener(new View.OnClickListener() {
+        binding.rlAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(HomePage.this, AccountActivity.class);
-                i.putExtra("firstname", firstname);
-                i.putExtra("lastname", lastname);
-                i.putExtra("username", username);
                 startActivity(i);
             }
         });
+
+        binding.executePendingBindings();
     }
 
     @Override

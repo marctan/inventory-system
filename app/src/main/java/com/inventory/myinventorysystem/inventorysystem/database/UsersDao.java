@@ -2,6 +2,7 @@ package com.inventory.myinventorysystem.inventorysystem.database;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -14,6 +15,8 @@ public interface UsersDao {
     List<User> getAllUsers();
     @Query("Select * from users where username = :username AND password = :password limit 1")
     User getUser(String username, String password);
+    @Query("Select * from users where id = :id limit 1")
+    LiveData<User> getUserById(int id);
     @Insert
     void insertUser(User user);
     @Update

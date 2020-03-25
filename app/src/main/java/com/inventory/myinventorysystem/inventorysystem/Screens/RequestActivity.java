@@ -2,39 +2,29 @@ package com.inventory.myinventorysystem.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.Adapters.RequestAdapter;
-import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
 import com.inventory.myinventorysystem.inventorysystem.database.Request;
+import com.inventory.myinventorysystem.inventorysystem.databinding.ActivityRequestBinding;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.RequestViewModel;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequestActivity extends AppCompatActivity {
 
-    @BindView(R.id.rvRequest)
-
-    RecyclerView rv;
     RequestAdapter adapter;
     List<Request> requests;
-    List<Product> requested_products;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-    @BindView(R.id.no_request)
-    TextView no_request;
+
+    RequestViewModel requestViewModel;
+    ActivityRequestBinding binding;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -45,75 +35,46 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request);
-        ButterKnife.bind(this);
+        binding = ActivityRequestBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = binding.myToolbar;
         myToolbar.setTitle("Requests");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvRequest.setHasFixedSize(true);
+        binding.rvRequest.setLayoutManager(new LinearLayoutManager(this));
         requests = new ArrayList<>();
-        requested_products = new ArrayList<>();
-        adapter = new RequestAdapter(this, requests, requested_products);
-        rv.setAdapter(adapter);
+        adapter = new RequestAdapter(this);
+        binding.rvRequest.setAdapter(adapter);
+
+        requestViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(RequestViewModel.class);
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        requestViewModel.getAllRequests(MainActivity.isAdmin ? -1 : MainActivity.userID).observe(this, new Observer<List<Request>>() {
+            @Override
+            public void onChanged(List<Request> requestsProduct) {
+                requests = requestsProduct;
+                if (requests.size() == 0) {
+                    binding.noRequest.setVisibility(View.VISIBLE);
+                } else {
+                    binding.noRequest.setVisibility(View.GONE);
+                }
+            }
+        });
+        requestViewModel.getProductFromRequest(false).observe(this, new Observer<List<Product>>() {
+            @Override
+            public void onChanged(List<Product> products) {
+                binding.progressBar.setVisibility(View.GONE);
+                if (requests.size() == products.size()) {
+                    adapter.setRequests(requests, products);
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        new AllRequestsAsync(this).execute();
-    }
-
-    static class AllRequestsAsync extends AsyncTask<Void, Void, List<Request>> {
-        WeakReference<RequestActivity> activity;
-
-        AllRequestsAsync(RequestActivity activity) {
-            this.activity = new WeakReference<>(activity);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            activity.get().progressBar.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected List<Request> doInBackground(Void... voids) {
-            List<Request> req;
-            if(MainActivity.isAdmin) {
-                req = InventoryDatabase.getInstance(activity.get().getApplicationContext())
-                        .requestDao().getAllRequests();
-            } else {
-                req = InventoryDatabase.getInstance(activity.get().getApplicationContext())
-                        .requestDao().getAllRequestsByRequestor(MainActivity.userID);
-            }
-
-            activity.get().requested_products.clear();
-
-            for (int x = 0; x < req.size(); x++) {
-                activity.get().requested_products.add(InventoryDatabase.getInstance
-                        (activity.get().getApplicationContext()).productsDao().
-                        getProduct(req.get(x).getIdProduct())); //get the requested product
-            }
-
-            return req;
-        }
-
-        @Override
-        protected void onPostExecute(List<Request> requests) {
-            RequestActivity sa = activity.get();
-            sa.progressBar.setVisibility(View.GONE);
-            sa.requests.clear();
-            sa.requests.addAll(requests);
-            sa.adapter.notifyDataSetChanged();
-            if (requests.size() == 0) {
-                sa.no_request.setVisibility(View.VISIBLE);
-            } else {
-                sa.no_request.setVisibility(View.GONE);
-            }
-            super.onPostExecute(requests);
-        }
     }
 }

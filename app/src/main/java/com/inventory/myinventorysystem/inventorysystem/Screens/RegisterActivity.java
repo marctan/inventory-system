@@ -2,69 +2,56 @@ package com.inventory.myinventorysystem.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.inventory.myinventorysystem.inventorysystem.R;
-import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.User;
-
-import java.lang.ref.WeakReference;
+import com.inventory.myinventorysystem.inventorysystem.databinding.ActivityRegisterBinding;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.UserViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    @BindView(R.id.btnCreateAccount)
-    Button createAccount;
-
-    @BindView(R.id.TedFirstName)
-    EditText firstname;
-
-    @BindView(R.id.TedLastName)
-    EditText lastname;
-
-    @BindView(R.id.TedAccountUsername)
-    EditText username;
-
-    @BindView(R.id.TedAccountPassword)
-    EditText password;
-
-    @BindView(R.id.checkBoxAdmin)
-    CheckBox admin;
-
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    UserViewModel viewModel;
+    ActivityRegisterBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        ButterKnife.bind(this);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        Toolbar myToolbar = binding.myToolbar;
         myToolbar.setTitle("Register");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()))
+                .get(UserViewModel.class);
 
-        createAccount.setOnClickListener(new View.OnClickListener() {
+        viewModel.getInsertUserStatus().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    Toast.makeText(RegisterActivity.this, "Successfully created account!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        });
+
+        binding.btnCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (firstname.length() == 0 || lastname.length() == 0 || username.length() == 0 || password.length() == 0) {
-                    Toast.makeText(getApplicationContext(), "Some fields are empty!",Toast.LENGTH_SHORT).show();
+                if (binding.TedFirstName.length() == 0 || binding.TedLastName.length() == 0 || binding.TedAccountUsername.length() == 0 || binding.TedAccountPassword.length() == 0) {
+                    Toast.makeText(getApplicationContext(), "Some fields are empty!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                new saveToDBTask(RegisterActivity.this, getApplicationContext(), username.getText().toString(),
-                        password.getText().toString(), firstname.getText().toString(),
-                        lastname.getText().toString(), admin.isChecked(), progressBar).execute();
+                binding.progressBar.setVisibility(View.VISIBLE);
+                User user = new User(0, binding.TedAccountUsername.getText().toString(), binding.TedAccountPassword.getText().toString(),
+                        binding.TedFirstName.getText().toString(), binding.TedLastName.getText().toString(), binding.checkBoxAdmin.isChecked());
+                viewModel.insert(user);
             }
         });
     }
@@ -73,47 +60,5 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
-    }
-
-    private static class saveToDBTask extends AsyncTask<Void, Void, Void> {
-        WeakReference<Context> ctx;
-        String username, password, firstname, lastname;
-        WeakReference<Activity> act;
-        WeakReference<ProgressBar> progressBar;
-        boolean admin;
-
-        saveToDBTask(Activity act, Context ctx, String username, String password,
-                     String firstname, String lastname, boolean admin, ProgressBar progressBar) {
-            this.act = new WeakReference<>(act);
-            this.ctx = new WeakReference<>(ctx);
-            this.username = username;
-            this.password = password;
-            this.firstname = firstname;
-            this.lastname = lastname;
-            this.admin = admin;
-            this.progressBar = new WeakReference<>(progressBar);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressBar.get().setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            User user = new User(0, username, password,
-                    firstname, lastname, admin);
-            InventoryDatabase.getInstance(ctx.get()).userDao().insertUser(user);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            progressBar.get().setVisibility(View.GONE);
-            Toast.makeText(ctx.get(), "Successfully created account!", Toast.LENGTH_SHORT).show();
-            super.onPostExecute(aVoid);
-            act.get().finish();
-        }
     }
 }

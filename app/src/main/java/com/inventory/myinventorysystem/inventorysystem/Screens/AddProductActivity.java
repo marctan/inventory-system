@@ -4,53 +4,38 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.inventory.myinventorysystem.inventorysystem.AssortedUtility.CameraGalleryHandler;
 import com.inventory.myinventorysystem.inventorysystem.BuildConfig;
-import com.inventory.myinventorysystem.inventorysystem.R;
-import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
+import com.inventory.myinventorysystem.inventorysystem.databinding.ActivityAddProductBinding;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.ProductViewModel;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AddProductActivity extends AppCompatActivity {
-    @BindView(R.id.productDesc)
-    EditText productDesc;
-    @BindView(R.id.productName)
-    EditText productName;
-    @BindView(R.id.productImage)
-    ImageView productImage;
-    @BindView(R.id.productQty)
-    EditText qty;
-    @BindView(R.id.btnAdd)
-    Button btnAdd;
-
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
 
     String destination = null;
     String cameraFilePath = null;
+
+    ProductViewModel productViewModel;
+
+    ActivityAddProductBinding binding;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -97,7 +82,7 @@ public class AddProductActivity extends AppCompatActivity {
                 Uri imageURI = CameraGalleryHandler.getImageUri(AddProductActivity.this, bitmap);
                 destination = CameraGalleryHandler.getRealPathFromURI(AddProductActivity.this, imageURI);
 
-                productImage.setImageBitmap(bitmap);
+                binding.productImage.setImageBitmap(bitmap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -108,7 +93,7 @@ public class AddProductActivity extends AppCompatActivity {
 
                 Uri imageURI = CameraGalleryHandler.getImageUri(AddProductActivity.this, bitmap);
                 destination = CameraGalleryHandler.getRealPathFromURI(AddProductActivity.this, imageURI);
-                productImage.setImageBitmap(bitmap);
+                binding.productImage.setImageBitmap(bitmap);
             }
         }
     }
@@ -122,78 +107,58 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_product);
-        ButterKnife.bind(this);
+        binding = ActivityAddProductBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = binding.myToolbar;
         myToolbar.setTitle("Add a Product");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        btnAdd.setOnClickListener(new View.OnClickListener() {
+
+        productViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication())).get(ProductViewModel.class);
+        productViewModel.getInsertStatus().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    Toast.makeText(AddProductActivity.this, "Product successfully added to DB!", Toast.LENGTH_SHORT).show();
+                    Intent returnIntent = new Intent();
+                    setResult(Activity.RESULT_OK, returnIntent);
+                    finish();
+                }
+            }
+        });
+
+        binding.btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (productDesc.getText().toString().length() == 0 ||
-                        productName.getText().toString().length() == 0 ||
-                        qty.getText().toString().length() == 0) {
+                if (binding.productDesc.getText().toString().length() == 0 ||
+                        binding.productName.getText().toString().length() == 0 ||
+                        binding.productQty.getText().toString().length() == 0) {
                     Toast.makeText(AddProductActivity.this, "Some fields are missing!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (qty.getText().toString().length() > 0 && qty.getText().toString().equals("0")) {
+                if (binding.productQty.getText().toString().length() > 0 && binding.productQty.getText().toString().equals("0")) {
                     Toast.makeText(AddProductActivity.this, "Input a valid quantity!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                new AddProductToDB(AddProductActivity.this).execute();
+                binding.progressBar.setVisibility(View.VISIBLE);
+                String formatedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+                Product product = new Product(0, binding.productDesc.getText().toString(),
+                        binding.productName.getText().toString(), destination, formatedDate,
+                        Integer.parseInt(binding.productQty.getText().toString()));
+
+                productViewModel.insert(product);
             }
         });
-        productImage.setOnClickListener(new View.OnClickListener() {
+        binding.productImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CameraGalleryHandler.selectImage(AddProductActivity.this);
 
             }
         });
-    }
-
-    static class AddProductToDB extends AsyncTask<Void, Void, Void> {
-        WeakReference<AddProductActivity> activity;
-        String description, name;
-        int quantity;
-
-        AddProductToDB(AddProductActivity activity) {
-            this.activity = new WeakReference<>(activity);
-            description = activity.productDesc.getText().toString();
-            name = activity.productName.getText().toString();
-            quantity = Integer.parseInt(activity.qty.getText().toString());
-        }
-
-        @Override
-        protected void onPreExecute() {
-            activity.get().progressBar.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            String formatedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-            AddProductActivity act = activity.get();
-            Product product = new Product(0, description,
-                    name, act.destination, formatedDate, quantity);
-            InventoryDatabase.getInstance(act.getApplicationContext()).productsDao().insertProduct(product);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void products) {
-            activity.get().progressBar.setVisibility(View.GONE);
-            Toast.makeText(activity.get().getApplicationContext(), "Product successfully added to DB!"
-                    , Toast.LENGTH_SHORT).show();
-            super.onPostExecute(products);
-            Intent returnIntent = new Intent();
-            activity.get().setResult(Activity.RESULT_OK, returnIntent);
-            activity.get().finish();
-        }
     }
 }

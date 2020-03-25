@@ -5,11 +5,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -17,43 +17,30 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.SearchProvider.SearchSuggestionProvider;
 import com.inventory.myinventorysystem.inventorysystem.Adapters.SupplyAdapter;
 import com.inventory.myinventorysystem.inventorysystem.AssortedUtility.SwipeToDelete;
-import com.inventory.myinventorysystem.inventorysystem.database.InventoryDatabase;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.inventory.myinventorysystem.inventorysystem.databinding.ActivitySupplyBinding;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.ProductViewModel;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.RequestViewModel;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SupplyActivity extends AppCompatActivity {
 
-    @BindView(R.id.rvSupply)
-    RecyclerView rv;
     SupplyAdapter adapter;
-    List<Product> products;
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-    @BindView(R.id.no_products)
-    TextView no_products;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
     SearchView searchView;
-
-    @BindView(R.id.my_toolbar)
-    Toolbar myToolbar;
+    ProductViewModel productViewModel;
+    RequestViewModel requestViewModel;
+    ActivitySupplyBinding binding;
 
     private void enableSwipeToDelete() {
         if (MainActivity.isAdmin) {
@@ -61,13 +48,14 @@ public class SupplyActivity extends AppCompatActivity {
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                     final int position = viewHolder.getAdapterPosition();
-
-                    new DeleteProduct(SupplyActivity.this, position).execute();
+                    Product product = productViewModel.getProducts().getValue().get(position);
+                    productViewModel.delete(product);
+                    requestViewModel.deleteByID(product.getId());
                 }
             };
 
             ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
-            itemTouchhelper.attachToRecyclerView(rv);
+            itemTouchhelper.attachToRecyclerView(binding.rvSupply);
         }
     }
 
@@ -108,7 +96,7 @@ public class SupplyActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                new AllProductsAsync(SupplyActivity.this, null).execute(); //show ALL again when hitting the back button
+                adapter.setProducts(productViewModel.getProducts().getValue());
                 return true;
             }
         });
@@ -117,14 +105,16 @@ public class SupplyActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent intent) {
-
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            binding.progressBar.setVisibility(View.VISIBLE);
+
             String query = intent.getStringExtra(SearchManager.QUERY);
             //use the query to search your data somehow
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                     SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
             suggestions.saveRecentQuery(query, null);
-            new AllProductsAsync(this, query).execute();//filter search
+
+            productViewModel.queryProducts(query + "%");
         }
     }
 
@@ -149,33 +139,60 @@ public class SupplyActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         handleIntent(getIntent());
-        setContentView(R.layout.activity_supply);
-        ButterKnife.bind(this);
+        binding = ActivitySupplyBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        Toolbar myToolbar = binding.myToolbar;
         myToolbar.setTitle("Supplies");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        products = new ArrayList<>();
-        adapter = new SupplyAdapter(SupplyActivity.this, products);
-        rv.setAdapter(adapter);
-        rv.setHasFixedSize(true);
-        //rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), DividerItemDecoration.VERTICAL));
+        binding.progressBar.setVisibility(View.VISIBLE);
+        requestViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(RequestViewModel.class);
+        productViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(ProductViewModel.class);
+        productViewModel.getProducts().observe(this, new Observer<List<Product>>() {
+            @Override
+            public void onChanged(List<Product> products) {
+                if (products.size() == 0) {
+                    binding.noProducts.setVisibility(View.VISIBLE);
+                } else {
+                    binding.noProducts.setVisibility(View.GONE);
+                }
+
+                adapter.setProducts(products);
+                binding.progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        productViewModel.getProductsFromQuery().observe(this, new Observer<List<Product>>() {
+            @Override
+            public void onChanged(List<Product> products) {
+                if (products.size() == 0) {
+                    binding.noProducts.setVisibility(View.VISIBLE);
+                } else {
+                    binding.noProducts.setVisibility(View.GONE);
+                }
+                adapter.setProducts(products);
+                binding.progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        binding.rvSupply.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new SupplyAdapter(SupplyActivity.this);
+        binding.rvSupply.setAdapter(adapter);
+        binding.rvSupply.setHasFixedSize(true);
 
         enableSwipeToDelete();
 
-        if (MainActivity.isAdmin) {
-            fab.setVisibility(View.VISIBLE);
-        } else {
-            fab.setVisibility(View.GONE);
-        }
+        binding.setAdmin(MainActivity.isAdmin);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SupplyActivity.this, AddProductActivity.class);
@@ -184,96 +201,23 @@ public class SupplyActivity extends AppCompatActivity {
         });
 
         if (MainActivity.isAdmin) {
-            rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            binding.rvSupply.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    if (dy > 0 || dy < 0 && fab.isShown()) {
-                        fab.hide();
+                    if (dy > 0 || dy < 0 && binding.fab.isShown()) {
+                        binding.fab.hide();
                     }
                 }
 
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        fab.show();
+                        binding.fab.show();
                     }
 
                     super.onScrollStateChanged(recyclerView, newState);
                 }
             });
-        }
-
-        new AllProductsAsync(this, null).execute();//show all
-    }
-
-    static class AllProductsAsync extends AsyncTask<Void, Void, List<Product>> {
-        WeakReference<SupplyActivity> activity;
-        String searchQuery;
-
-        AllProductsAsync(SupplyActivity activity, String query) {
-            this.activity = new WeakReference<>(activity);
-            this.searchQuery = query;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            activity.get().progressBar.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected List<Product> doInBackground(Void... voids) {
-            if (searchQuery == null) {
-                return InventoryDatabase.getInstance(activity.get().getApplicationContext())
-                        .productsDao().getAllProducts();
-            } else {
-                return InventoryDatabase.getInstance(activity.get().getApplicationContext())
-                        .productsDao().getAllProductsByQuery(searchQuery + "%");
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Product> products) {
-            SupplyActivity sa = activity.get();
-            sa.progressBar.setVisibility(View.GONE);
-            sa.products.clear();
-            sa.products.addAll(products);
-            sa.adapter.notifyDataSetChanged();
-            if (products.size() == 0) {
-                sa.no_products.setVisibility(View.VISIBLE);
-            } else {
-                sa.no_products.setVisibility(View.GONE);
-            }
-
-            super.onPostExecute(products);
-        }
-    }
-
-    static class DeleteProduct extends AsyncTask<Void, Void, Void> {
-        WeakReference<SupplyActivity> activity;
-        int position;
-
-        DeleteProduct(SupplyActivity activity, int position) {
-            this.activity = new WeakReference<>(activity);
-            this.position = position;
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            //When deleting a product, Delete it from request also
-            InventoryDatabase.getInstance(activity.get().getApplicationContext()).requestDao().deleteRequestByProductId(
-                    activity.get().products.get(position).getId());
-
-
-            InventoryDatabase.getInstance(activity.get().getApplicationContext()).productsDao().deleteProduct(activity.get().products.get(position));
-            activity.get().products.remove(position);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            activity.get().adapter.notifyDataSetChanged();
         }
     }
 
@@ -282,9 +226,8 @@ public class SupplyActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == 1 || requestCode == 2) && resultCode == Activity.RESULT_OK) {
             if (searchView != null) {
-                myToolbar.collapseActionView();
+                binding.myToolbar.collapseActionView();
             }
-            new AllProductsAsync(this, null).execute();
         }
     }
 }

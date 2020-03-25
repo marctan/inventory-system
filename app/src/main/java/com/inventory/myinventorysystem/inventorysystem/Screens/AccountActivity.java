@@ -2,67 +2,54 @@ package com.inventory.myinventorysystem.inventorysystem.Screens;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.SearchProvider.SearchSuggestionProvider;
+import com.inventory.myinventorysystem.inventorysystem.database.User;
+import com.inventory.myinventorysystem.inventorysystem.databinding.ActivityAccountBinding;
+import com.inventory.myinventorysystem.inventorysystem.viewmodel.UserViewModel;
 
 public class AccountActivity extends AppCompatActivity {
 
-    @BindView(R.id.firstname)
-    TextView firstname;
-
-    @BindView(R.id.lastname)
-    TextView lastname;
-
-    @BindView(R.id.username)
-    TextView username;
-
-    @BindView(R.id.type)
-    TextView type;
-
-    @BindView(R.id.avatar)
-    ImageView avatar;
-
-    @BindView(R.id.logout)
-    Button logout;
+    ActivityAccountBinding binding;
+    UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_account);
+        userViewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(UserViewModel.class);
 
-        ButterKnife.bind(this);
-        firstname.setText(getIntent().getStringExtra("firstname"));
-        lastname.setText(getIntent().getStringExtra("lastname"));
-        username.setText(getIntent().getStringExtra("username"));
-        type.setText(MainActivity.isAdmin ? "Admin" : "User");
+        userViewModel.getUserById(MainActivity.userID).observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+                binding.setUser(user);
+            }
+        });
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = binding.myToolbar;
         myToolbar.setTitle("Account");
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        logout.setOnClickListener(new View.OnClickListener() {
+        binding.logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showLogoutMessage();
             }
         });
 
-        avatar.setImageDrawable(MainActivity.isAdmin ? getDrawable(R.drawable.admin_avatar) : getDrawable(R.drawable.user_avatar));
+        binding.executePendingBindings();
     }
 
     @Override
@@ -71,7 +58,7 @@ public class AccountActivity extends AppCompatActivity {
         return true;
     }
 
-    private void showLogoutMessage(){
+    private void showLogoutMessage() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle("Logout");
         builder.setMessage("Are you sure you want to logout?");

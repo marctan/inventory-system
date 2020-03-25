@@ -3,78 +3,72 @@ package com.inventory.myinventorysystem.inventorysystem.Adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.inventory.myinventorysystem.inventorysystem.R;
 import com.inventory.myinventorysystem.inventorysystem.database.Product;
 import com.inventory.myinventorysystem.inventorysystem.database.Request;
+import com.inventory.myinventorysystem.inventorysystem.databinding.RequestReportsRowBinding;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ReportRequestAdapter extends RecyclerView.Adapter<ReportRequestAdapter.MyViewHolder> {
-    List<Request> requests;
-    List<Product> products;
-    Context ctx;
+    private List<Request> requests;
+    private List<Product> products;
+    private Context ctx;
 
-    public ReportRequestAdapter(Context ctx, List<Request> requests, List<Product> products) {
-        this.requests = requests;
-        this.products = products;
+    public ReportRequestAdapter(Context ctx) {
         this.ctx = ctx;
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.request_reports_row, parent, false));
+        RequestReportsRowBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+        ,R.layout.request_reports_row, parent, false);
+        return new MyViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Request req = requests.get(position);
-
+        holder.bind(req);
         if (products.get(position).getImageURI() != null) {
-            holder.productImage.setImageURI(Uri.parse(products.get(position).getImageURI()));
+            holder.binding.productImage.setImageURI(Uri.parse(products.get(position).getImageURI()));
         } else {
-            holder.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
+            holder.binding.productImage.setImageDrawable(ctx.getResources().getDrawable(R.drawable.photo_placeholder_icon_80));
         }
-
-        holder.requestorName.setText(req.getRequestorName());
-        holder.productName.setText(req.getProductName());
-        holder.qty.setText(String.valueOf(req.getQuantityRequest()));
-        holder.dateRequested.setText(req.getDateRequested());
-        holder.dateApproved.setText(req.getDateApproved());
     }
 
     @Override
     public int getItemCount() {
+        if(requests == null) {
+            return 0;
+        }
         return requests.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.productImage)
-        ImageView productImage;
-        @BindView(R.id.requestorName)
-        TextView requestorName;
-        @BindView(R.id.productName)
-        TextView productName;
-        @BindView(R.id.requestedQuantity)
-        TextView qty;
-        @BindView(R.id.dateRequested)
-        TextView dateRequested;
-        @BindView(R.id.dateApproved)
-        TextView dateApproved;
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        RequestReportsRowBinding binding;
 
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+        private MyViewHolder(@NonNull RequestReportsRowBinding itemView) {
+            super(itemView.getRoot());
+            binding = itemView;
         }
+
+        public void bind(Request request) {
+            binding.setRequest(request);
+            binding.executePendingBindings();
+        }
+    }
+
+    public void setItem(List<Request> requests, List<Product> products) {
+        this.requests = requests;
+        this.products = products;
+        notifyDataSetChanged();
     }
 }
